@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#721121" />
+  <meta name="author" content="Mạnh Hiệp & Huyền Trang" />
+  
+  <!-- SEO & Social Sharing (Open Graph / Zalo / Facebook Messenger) -->
+  <title>Lễ Thành Hôn: Mạnh Hiệp & Huyền Trang | 26.12.2026</title>
+  <meta name="description" content="Trân trọng kính mời quý khách tới tham dự Lễ thành hôn của Mạnh Hiệp & Huyền Trang tại Trống Đồng Palace Cầu Giấy vào ngày 26/12/2026." />
+  
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Lễ Thành Hôn: Mạnh Hiệp & Huyền Trang | 26.12.2026" />
+  <meta property="og:description" content="Trân trọng kính mời quý khách tới tham dự Lễ thành hôn của chúng mình tại Trống Đồng Palace Cầu Giấy vào ngày 26/12/2026." />
+  <meta property="og:image" content="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=80" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Lễ Thành Hôn: Mạnh Hiệp & Huyền Trang | 26.12.2026" />
+  <meta name="twitter:description" content="Trân trọng kính mời quý khách tới tham dự Lễ thành hôn của Mạnh Hiệp & Huyền Trang." />
+  <meta name="twitter:image" content="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=80" />
+
+  <!-- Favicon Official Monogram -->
+  <link rel="icon" type="image/svg+xml" href="logo-cuoi-H-T-tach-nen-2048px.svg" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            wedding: {
+              cream: '#F9F6F0',
+              beige: '#F5EFE6',
+              champagne: '#EBE3D5',
+              burgundy: '#721121',
+              burgundyDark: '#4A0E17',
+              burgundyDeep: '#5E0B15',
+              burgundyAccent: '#800020',
+              gold: '#C5A059',
+              goldLight: '#DFCA95',
+              dark: '#2B090E',
+              charcoal: '#2C2523',
+            }
+          },
+          fontFamily: {
+            serifLuxury: ['"Playfair Display"', 'Georgia', 'serif'],
+            playfair: ['"Playfair Display"', 'Georgia', 'serif'],
+            sansApple: ['"Plus Jakarta Sans"', '-apple-system', 'sans-serif'],
+            script: ['"Great Vibes"', '"Alex Brush"', 'cursive'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- External Libraries (CDNs) -->
+  <!-- 1. Lenis Smooth Scroll -->
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
+  <!-- 2. GSAP & ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <!-- 3. Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+</head>
+
+<body class="bg-wedding-cream text-wedding-dark antialiased envelope-locked selection:bg-wedding-burgundy selection:text-wedding-cream">
+
+  <!-- ==============================================================================
+       1. SPLASH SCREEN / PHONG BÌ ĐỎ ĐÔ ÉP KIM (LUXURY ROYAL ENVELOPE)
+       ============================================================================== -->
+  <div id="envelope-screen" aria-label="Màn hình mở thiệp">
+    <div class="flex flex-col items-center justify-center p-4 max-w-lg w-full">
+      
+      <!-- Hộp Phong bì Hoàng Gia (Royal Burgundy Envelope) -->
+      <div id="envelope-wrapper" class="envelope-wrapper">
+        <div class="envelope-box">
+          <!-- Viền ép kim vàng kép -->
+          <div class="envelope-gold-border"></div>
+
+          <!-- Nắp phong bì tam giác gập xuống -->
+          <div class="envelope-flap">
+            <div class="envelope-flap-stitch"></div>
+          </div>
+
+          <!-- Nửa trên phong bì: Lời mời cá nhân hóa -->
+          <div class="envelope-top-content">
+            <span class="envelope-tag-pill">
+              WEDDING INVITATION
+            </span>
+            <h2 id="envelope-guest-name" class="font-serifLuxury envelope-guest-heading text-wedding-goldLight font-semibold tracking-wide drop-shadow-sm mt-1">
+              Trân trọng kính mời: Quý khách
+            </h2>
+          </div>
+
+          <!-- Con dấu sáp 3D Monogram ở chính giữa khóa nắp phong bì -->
+          <div id="wax-seal" class="wax-seal" title="Chạm để mở thiệp">
+            <img 
+              src="logo-cuoi-H-T-tach-nen-2048px.svg" 
+              alt="Logo H&amp;T" 
+              class="w-[90px] h-[90px] sm:w-[80px] sm:h-[80px] object-contain filter drop-shadow-[0_2px_6px_rgba(0,0,0,0.65)] pointer-events-none select-none"
+            />
+            <div class="seal-pulse-ring"></div>
+          </div>
+
+          <!-- Nửa dưới phong bì: Tên Cô dâu Chú rể và Ngày cưới -->
+          <div class="envelope-bottom-content">
+            <h3 class="font-serifLuxury envelope-couple-heading font-bold text-[#F9F6F0] tracking-wide drop-shadow-sm">
+              <span>Mạnh Hiệp</span>
+              <span class="font-script text-wedding-goldLight font-normal px-1 text-[1.2em]">&amp;</span>
+              <span>Huyền Trang</span>
+            </h3>
+            <p class="text-[10px] sm:text-xs uppercase tracking-[0.2em] text-wedding-goldLight/90 font-medium mt-1 whitespace-nowrap">
+              26 . 12 . 2026 &bull; HÀ NỘI
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Nút mở thiệp -->
+      <button 
+        id="btn-open-envelope" 
+        class="mt-6 px-8 py-3 rounded-full burgundy-gradient-btn font-sansApple text-xs sm:text-sm font-semibold tracking-wider uppercase border border-wedding-gold/50 shadow-xl flex items-center gap-2 hover:scale-105 transition-all"
+      >
+        <span>Chạm để mở thiệp</span>
+        <svg class="w-4 h-4 animate-bounce text-wedding-goldLight" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+        </svg>
+      </button>
+
+      <p class="text-[11px] text-[#5A4744]/75 mt-3 font-sansApple text-center">
+        Giai điệu âm nhạc ngọt ngào sẽ tự động phát khi mở thiệp
+      </p>
+    </div>
+  </div>
+
+  <!-- ==============================================================================
+       2. FLOATING AUDIO CONTROL (NÚT ĐIỀU KHIỂN NHẠC NỀN)
+       ============================================================================== -->
+  <!-- FLOATING AUDIO CONTROL (GÓC DƯỚI MÀN HÌNH) -->
+  <div id="audio-control-pill" class="audio-floating-bar hidden" title="Điều khiển nhạc nền" aria-label="Điều khiển nhạc nền">
+    
+    <!-- Nút bài trước -->
+    <button id="audio-prev" class="audio-btn audio-btn-prev" aria-label="Bài trước">
+      <img src="icons/prev.png" alt="Bài trước" class="audio-icon">
+    </button>
+
+    <!-- Thanh tiến độ nhỏ -->
+    <div class="audio-progress">
+      <div class="audio-progress-bar" id="audio-progress-bar"></div>
+    </div>
+
+    <!-- Thông tin bài hát -->
+    <div class="audio-info-text">
+      <div id="audio-title" class="audio-title">A Million Dreams</div>
+      <div id="audio-artist" class="audio-artist">Instrumental Cover • Bài 1 / 6</div>
+    </div>
+
+    <!-- Nút Play / Pause -->
+    <button id="audio-play-pause" class="audio-btn" aria-label="Play / Tạm dừng">
+      <img src="icons/play.png" alt="Play" class="audio-icon" id="audio-play-pause-img">
+    </button>
+
+    <!-- Nút bài tiếp theo -->
+    <button id="audio-next" class="audio-btn audio-btn-next" aria-label="Bài tiếp theo">
+      <img src="icons/next.png" alt="Bài tiếp theo" class="audio-icon">
+    </button>
+
+  </div>
+
+  <!-- ==============================================================================
+       3. HERO SECTION (APPLE SCROLLYTELLING OPENING)
+       ============================================================================== -->
+  <header id="hero-section" class="relative min-h-[100dvh] flex flex-col justify-between items-center text-center px-4 py-12 overflow-hidden">
+    <!-- Background Image with Parallax & Gradient Fade -->
+    <div class="absolute inset-0 z-0">
+      <img 
+        src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1920&q=85" 
+        alt="Mạnh Hiệp & Huyền Trang Wedding" 
+        class="hero-bg-image w-full h-[120%] object-cover object-center filter brightness-[0.88]"
+      />
+      <!-- Apple Subtle Vignette & Gradient into Beige at Bottom -->
+      <div class="absolute inset-0 bg-gradient-to-b from-[#2B090E]/60 via-transparent to-wedding-cream"></div>
+    </div>
+
+    <!-- Top Badge -->
+    <div class="relative z-10 pt-6 hero-badge">
+      <span class="inline-block px-5 py-1.5 rounded-full text-xs tracking-[0.25em] uppercase text-wedding-goldLight bg-[#4A0E17]/60 backdrop-blur-md border border-wedding-gold/40 shadow-sm">
+        Ngày chung đôi
+      </span>
+    </div>
+
+    <!-- Center Typography -->
+    <div class="relative z-10 my-auto py-8 text-wedding-cream max-w-3xl mx-auto">
+      <p id="hero-guest-name" class="font-sansApple text-sm sm:text-base tracking-widest uppercase text-wedding-goldLight mb-3 font-medium drop-shadow-sm">
+        Kính gửi: Quý khách
+      </p>
+      
+      <p class="font-script text-3xl sm:text-4xl md:text-5xl text-wedding-goldLight mb-2 drop-shadow">
+        Lễ Thành Hôn
+      </p>
+
+      <h1 class="hero-title-main font-serifLuxury hero-couple-heading font-bold tracking-tight text-[#F9F6F0] mb-4 drop-shadow-md">
+        <span>Mạnh Hiệp</span>
+        <span class="font-script text-wedding-gold font-normal px-2 text-[1.15em]">&amp;</span>
+        <span>Huyền Trang</span>
+      </h1>
+
+      <!-- Official Wedding Monogram Logo -->
+      <div class="hero-monogram-circle w-40 h-40 sm:w-64 sm:h-64 md:w-80 md:h-80 mx-auto my-4 flex items-center justify-center">
+        <img 
+          src="logo-cuoi-H-T-tach-nen-2048px.svg" 
+          alt="Logo cưới Mạnh Hiệp &amp; Huyền Trang" 
+          class="w-full h-full object-contain filter drop-shadow-[0_4px_16px_rgba(0,0,0,0.5)] hover:scale-105 transition-transform duration-500"
+        />
+      </div>
+
+      <!-- Date Banner -->
+      <div class="hero-date-box inline-flex items-center gap-4 px-6 py-2 rounded-full bg-white/20 backdrop-blur-md border border-wedding-gold/40 shadow-md">
+        <span class="font-serifLuxury text-lg sm:text-xl font-semibold tracking-wider text-white">26 . 12 . 2026</span>
+        <span class="w-1.5 h-1.5 rounded-full bg-wedding-gold"></span>
+        <span class="font-sansApple text-xs sm:text-sm tracking-widest text-wedding-cream">HÀ NỘI</span>
+      </div>
+    </div>
+
+    <!-- Scroll Hint at Bottom -->
+    <div class="relative z-10 pb-4 hero-scroll-hint">
+      <div class="flex flex-col items-center gap-2 text-wedding-burgundy">
+        <span class="text-xs uppercase tracking-[0.2em] font-semibold text-wedding-burgundy/80">Cuộn để khám phá</span>
+        <svg class="w-5 h-5 animate-bounce text-wedding-burgundy" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+        </svg>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==============================================================================
+       STORY & INVITATION LETTER (LỜI NGỎ & CÂU CHUYỆN TÌNH YÊU)
+       ============================================================================== -->
+  <section class="py-20 px-4 max-w-4xl mx-auto text-center">
+    <div class="gsap-reveal mb-12">
+      <div class="w-40 h-40 sm:w-64 sm:h-64 mx-auto mb-3 opacity-90 hover:opacity-100 transition-opacity">
+        <img 
+          src="logo-cuoi-H-T-tach-nen-2048px.svg" 
+          alt="Logo H&amp;T" 
+          class="w-full h-full object-contain filter drop-shadow-sm"
+        />
+      </div>
+      <h2 class="font-serifLuxury text-3xl sm:text-4xl md:text-5xl font-bold text-wedding-burgundy tracking-wide">
+        Lời Ngỏ &amp; Hẹn Ước
+      </h2>
+      <div class="w-16 h-0.5 bg-wedding-gold mx-auto mt-4 mb-6"></div>
+      
+      <p class="font-serifLuxury text-xl sm:text-2xl text-wedding-dark/90 leading-relaxed italic max-w-2xl mx-auto mb-8">
+        “Tình yêu không chỉ là nhìn nhau, mà là cùng nhau nhìn về một hướng trên con đường phía trước.”
+      </p>
+
+      <p class="font-sansApple text-sm sm:text-base text-wedding-charcoal leading-relaxed max-w-2xl mx-auto font-light">
+        Trải qua những năm tháng cùng sẻ chia ngọt bùi, từ những buổi hẹn hò dưới tán cây Hà Nội đến những ước mơ về một mái ấm sum vầy, 
+        chúng mình nhận ra rằng hạnh phúc trọn vẹn nhất là khi có nhau. 
+        Ngày hôm nay, trong sự chúc phúc của hai bên gia đình, chúng mình trân trọng gửi tới bạn lời mời chân thành nhất để cùng chứng kiến thời khắc thiêng liêng này.
+      </p>
+    </div>
+
+    <!-- Cô dâu & Chú rể Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12 max-w-3xl mx-auto">
+      
+      <!-- Chú rể Card -->
+      <div class="gsap-reveal p-6 sm:p-8 rounded-3xl glass-panel text-center relative overflow-hidden group">
+        <div class="w-32 h-32 sm:w-36 sm:h-36 mx-auto mb-5 rounded-full overflow-hidden border-2 border-wedding-gold p-1 shadow-md">
+          <img 
+            src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80" 
+            alt="Chú rể Mạnh Hiệp" 
+            class="w-full h-full object-cover rounded-full group-hover:scale-105 transition-transform duration-500"
+          />
+        </div>
+        <span class="text-xs uppercase tracking-widest text-wedding-gold font-semibold block mb-1">Chú Rể</span>
+        <h3 class="font-serifLuxury text-2xl sm:text-3xl font-bold text-wedding-burgundy mb-2">Đào Mạnh Hiệp</h3>
+        <p class="text-xs text-wedding-charcoal/70 mb-3 font-medium">Con ông: Đào Mạnh Hiển &amp; Bà: Nguyễn Thị Hà</p>
+        <p class="text-xs sm:text-sm text-wedding-charcoal italic leading-relaxed">
+          “Chàng kỹ sư với trái tim ấm áp, yêu nghệ thuật, luôn tin vào điều kỳ diệu của định mệnh và nụ cười rạng rỡ của người con gái ấy.”
+        </p>
+      </div>
+
+      <!-- Cô dâu Card -->
+      <div class="gsap-reveal p-6 sm:p-8 rounded-3xl glass-panel text-center relative overflow-hidden group">
+        <div class="w-32 h-32 sm:w-36 sm:h-36 mx-auto mb-5 rounded-full overflow-hidden border-2 border-wedding-gold p-1 shadow-md">
+          <img 
+            src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80" 
+            alt="Cô dâu Huyền Trang" 
+            class="w-full h-full object-cover rounded-full group-hover:scale-105 transition-transform duration-500"
+          />
+        </div>
+        <span class="text-xs uppercase tracking-widest text-wedding-gold font-semibold block mb-1">Cô Dâu</span>
+        <h3 class="font-serifLuxury text-2xl sm:text-3xl font-bold text-wedding-burgundy mb-2">Nguyễn Huyền Trang</h3>
+        <p class="text-xs text-wedding-charcoal/70 mb-3 font-medium">Con ông: Nguyễn Mạnh Hòa &amp; Bà: Nguyễn Thu Huyền</p>
+        <p class="text-xs sm:text-sm text-wedding-charcoal italic leading-relaxed">
+          “Cô gái yêu nghệ thuật, dịu dàng và tinh tế. Nơi nào có em, nơi đó ngập tràn ánh nắng và sự an yên trong tâm hồn.”
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==============================================================================
+       4. COUNTDOWN & SAVE THE DATE
+       ============================================================================== -->
+  <section id="countdown-section" class="py-16 px-4 bg-wedding-champagne/40">
+    <div class="max-w-4xl mx-auto text-center">
+      
+      <div class="gsap-reveal mb-8">
+        <!-- <div class="w-40 h-40 sm:w-64 sm:h-64 mx-auto mb-3 opacity-90 hover:opacity-100 transition-opacity">
+          <img 
+            src="logo-cuoi-H-T-tach-nen-2048px.svg" 
+            alt="Logo H&amp;T" 
+            class="w-full h-full object-contain filter drop-shadow-sm"
+          />
+        </div> -->
+        <span class="font-script text-3xl sm:text-4xl text-wedding-gold block mb-1">Đếm Ngược Ngày Chung Đôi</span>
+        <h2 class="font-serifLuxury text-3xl sm:text-4xl font-bold text-wedding-burgundy">
+          Tiệc thành hôn của chúng mình sẽ được tổ chức vào
+        </h2>
+        <p class="text-sm text-wedding-charcoal mt-2">
+          Thứ Bảy, ngày 26 tháng 12 năm 2026 (Tức ngày 18 tháng 11 năm Bính Ngọ)
+        </p>
+      </div>
+
+      <!-- 4 Ô Đếm Ngược Glassmorphism -->
+      <div class="grid grid-cols-4 gap-3 sm:gap-6 max-w-xl mx-auto my-8">
+        <div class="countdown-box p-4 sm:p-6 text-center">
+          <span id="cd-days" class="font-serifLuxury text-3xl sm:text-5xl font-bold text-wedding-burgundy block">00</span>
+          <span class="text-[10px] sm:text-xs uppercase tracking-widest text-wedding-charcoal/80 font-medium">Ngày</span>
+        </div>
+        <div class="countdown-box p-4 sm:p-6 text-center">
+          <span id="cd-hours" class="font-serifLuxury text-3xl sm:text-5xl font-bold text-wedding-burgundy block">00</span>
+          <span class="text-[10px] sm:text-xs uppercase tracking-widest text-wedding-charcoal/80 font-medium">Giờ</span>
+        </div>
+        <div class="countdown-box p-4 sm:p-6 text-center">
+          <span id="cd-minutes" class="font-serifLuxury text-3xl sm:text-5xl font-bold text-wedding-burgundy block">00</span>
+          <span class="text-[10px] sm:text-xs uppercase tracking-widest text-wedding-charcoal/80 font-medium">Phút</span>
+        </div>
+        <div class="countdown-box p-4 sm:p-6 text-center">
+          <span id="cd-seconds" class="font-serifLuxury text-3xl sm:text-5xl font-bold text-wedding-burgundy block">00</span>
+          <span class="text-[10px] sm:text-xs uppercase tracking-widest text-wedding-charcoal/80 font-medium">Giây</span>
+        </div>
+      </div>
+
+      <!-- Nút Thêm vào Lịch (Add to Calendar) -->
+      <div class="gsap-reveal flex flex-wrap items-center justify-center gap-3 sm:gap-4 mt-8">
+        <!-- Google Calendar Button -->
+        <button 
+          id="btn-calendar-google"
+          class="px-6 py-2.5 rounded-full burgundy-gradient-btn text-xs sm:text-sm font-semibold tracking-wider flex items-center gap-2 border border-wedding-gold/40 shadow-sm"
+        >
+          <svg class="w-4 h-4 text-wedding-goldLight" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/>
+          </svg>
+          <span>Thêm vào Lịch cá nhân</span>
+        </button>
+
+        <!-- Apple / Outlook .ics Calendar Button -->
+        <button 
+          id="btn-calendar-ics"
+          class="px-6 py-2.5 rounded-full bg-white/80 hover:bg-white text-wedding-burgundy text-xs sm:text-sm font-semibold tracking-wider flex items-center gap-2 border border-wedding-gold/50 shadow-sm transition-all"
+        >
+          <svg class="w-4 h-4 text-wedding-burgundy" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+          </svg>
+          <span>Tải file Apple Calendar (.ics)</span>
+        </button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==============================================================================
+       5. SHORT VIDEO PRE-WEDDING (GSAP BURGUNDY BACKGROUND MORPH & SCALE-UP)
+       ============================================================================== -->
+  <section id="video-section" class="py-24 px-4 transition-colors duration-700">
+    <div class="max-w-4xl mx-auto text-center">
+      
+      <div class="mb-10">
+        <span class="font-script text-3xl sm:text-4xl text-wedding-gold block mb-2">Khoảnh Khắc Yêu Thương</span>
+        <p class="text-xs sm:text-sm opacity-90 mt-2 font-sansApple">
+          Từng ánh mắt, từng nụ cười được ghi lại trọn vẹn trong thước phim kỷ niệm
+        </p>
+      </div>
+
+      <!-- Video Container Frame với hiệu ứng scale on scroll -->
+      <div class="video-container-frame aspect-video w-full max-w-3xl mx-auto bg-black relative">
+        <iframe 
+          id="wedding-video-iframe"
+          class="w-full h-full object-cover"
+          src="https://www.youtube.com/embed/Z1BCujX3pw8?autoplay=0&mute=1&controls=1&rel=0&loop=1" 
+          title="Pre-wedding Video" 
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+          allowfullscreen
+        ></iframe>
+      </div>
+
+      <p class="text-xs sm:text-sm italic opacity-85 mt-6 font-serifLuxury">
+        “Từng khoảnh khắc bên nhau là từng viên gạch xây nên mái ấm hạnh phúc”
+      </p>
+
+    </div>
+  </section>
+
+  <!-- ==============================================================================
+       6. THƯ VIỆN ẢNH (BENTO GRID & LIGHTBOX)
+       ============================================================================== -->
+  <section id="gallery-section" class="py-20 px-4 max-w-6xl mx-auto">
+    <div class="text-center mb-12 gsap-reveal">
+      <span class="font-script text-3xl sm:text-4xl text-wedding-gold block mb-2">Our Wedding Album</span>
+      <h2 class="font-serifLuxury text-3xl sm:text-4xl md:text-5xl font-bold text-wedding-burgundy">
+        Album Kỷ Niệm
+      </h2>
+      <div class="w-16 h-0.5 bg-wedding-gold mx-auto mt-4 mb-4"></div>
+      <p class="text-xs sm:text-sm text-wedding-charcoal max-w-md mx-auto">
+        Chạm vào từng bức ảnh để xem kích thước lớn toàn màn hình
+      </p>
+    </div>
+
+    <!-- Bento Grid Container (Được render động từ config.js qua Google Drive parser) -->
+    <div id="gallery-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
+      <!-- Gallery cards will be injected by app.js -->
+    </div>
+  </section>
+
+  <!-- Lightbox Modal Fullscreen -->
+  <div id="lightbox-modal" role="dialog" aria-modal="true" aria-label="Xem ảnh toàn màn hình">
+    <div class="lightbox-backdrop absolute inset-0"></div>
+    
+    <!-- Close Button -->
+    <button id="lightbox-close" class="absolute top-6 right-6 z-20 text-white/80 hover:text-white p-2 rounded-full bg-black/40 backdrop-blur-md border border-white/20 transition-all">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    </button>
+
+    <!-- Prev Button -->
+    <button id="lightbox-prev" class="absolute left-4 top-1/2 -translate-y-1/2 z-20 text-white/80 hover:text-white p-3 rounded-full bg-black/40 backdrop-blur-md border border-white/20 transition-all">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+      </svg>
+    </button>
+
+    <!-- Next Button -->
+    <button id="lightbox-next" class="absolute right-4 top-1/2 -translate-y-1/2 z-20 text-white/80 hover:text-white p-3 rounded-full bg-black/40 backdrop-blur-md border border-white/20 transition-all">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+      </svg>
+    </button>
+
+    <!-- Lightbox Main Content -->
+    <div class="relative z-10 max-w-4xl max-h-[85vh] p-4 flex flex-col items-center">
+      <img id="lightbox-img" src="" alt="Wedding Photo Full" class="max-w-full max-h-[75vh] object-contain rounded-xl shadow-2xl border border-wedding-gold/30" />
+      <div class="mt-4 text-center text-wedding-cream">
+        <h4 id="lightbox-title" class="font-serifLuxury text-xl font-bold"></h4>
+        <p id="lightbox-subtitle" class="text-xs text-wedding-goldLight mt-1"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==============================================================================
+       7. TIMELINE SỰ KIỆN & DRESSCODE
+       ============================================================================== -->
+  <section id="timeline-section" class="py-20 px-4 bg-wedding-champagne/30">
+    <div class="max-w-4xl mx-auto">
+      
+      <!-- Section Title -->
+      <div class="text-center mb-16 gsap-reveal">
+        <span class="font-script text-3xl sm:text-4xl text-wedding-gold block mb-2">Lịch Trình Hôn Lễ</span>
+        <h2 class="font-serifLuxury text-3xl sm:text-4xl md:text-5xl font-bold text-wedding-burgundy">
+          Thời Gian &amp; Hoạt động 
+        </h2>
+
+        <div class="w-16 h-0.5 bg-wedding-gold mx-auto mt-4 mb-4"></div>
+        <p class="text-xs sm:text-sm text-wedding-charcoal">
+          Trân trọng đón tiếp những người thân yêu đúng giờ để buổi lễ thêm phần trọn vẹn
+        </p>
+      </div>
+
+      <!-- Vertical Timeline with Progress Line -->
+      <div class="relative my-12 max-w-2xl mx-auto">
+        <!-- Background Stem -->
+        <div class="timeline-stem">
+          <div id="timeline-progress-fill" class="timeline-progress-fill"></div>
+        </div>
+
+        <!-- 4 Timeline Events -->
+        <div class="space-y-12">
+          
+          <!-- Event 1 -->
+          <div class="relative flex items-center md:justify-between group">
+            <div class="flex items-center w-full md:w-1/2 pl-12 md:pl-0 md:pr-12 md:text-right">
+              <div>
+                <span class="inline-block px-3 py-1 rounded-full text-xs font-bold text-wedding-burgundy bg-wedding-burgundy/10 border border-wedding-burgundy/20 mb-1">
+                  10:00
+                </span>
+                <h4 class="font-serifLuxury text-2xl font-bold text-wedding-burgundy">Đón Tiếp Khách Mời</h4>
+                <p class="text-xs sm:text-sm text-wedding-charcoal/80 mt-1">
+                  Chào đón những vị khách quý, check-in chụp ảnh lưu niệm tại photobooth sang trọng cùng Cô dâu &amp; Chú rể.
+                </p>
+              </div>
+            </div>
+            <!-- Node Icon -->
+            <div class="absolute left-0 md:left-1/2 -translate-x-1/2 w-10 h-10 rounded-full bg-wedding-burgundy border-2 border-wedding-gold flex items-center justify-center text-wedding-goldLight shadow-md z-10">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              </svg>
+            </div>
+            <div class="hidden md:block w-1/2"></div>
+          </div>
+
+          <!-- Event 2 -->
+          <div class="relative flex items-center md:justify-between group">
+            <div class="hidden md:block w-1/2"></div>
+            <!-- Node Icon -->
+            <div class="absolute left-0 md:left-1/2 -translate-x-1/2 w-10 h-10 rounded-full bg-wedding-burgundy border-2 border-wedding-gold flex items-center justify-center text-wedding-goldLight shadow-md z-10">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+            <div class="flex items-center w-full md:w-1/2 pl-12 md:pl-12">
+              <div>
+                <span class="inline-block px-3 py-1 rounded-full text-xs font-bold text-wedding-burgundy bg-wedding-burgundy/10 border border-wedding-burgundy/20 mb-1">
+                  10:30
+                </span>
+                <h4 class="font-serifLuxury text-2xl font-bold text-wedding-burgundy">Lễ Thành Hôn Trang Trọng</h4>
+                <p class="text-xs sm:text-sm text-wedding-charcoal/80 mt-1">
+                  Thời khắc thiêng liêng trao nhẫn cưới, cắt bánh, rót rượu mừng và trao nhau lời hẹn ước trăm năm.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Event 3 -->
+          <div class="relative flex items-center md:justify-between group">
+            <div class="flex items-center w-full md:w-1/2 pl-12 md:pl-0 md:pr-12 md:text-right">
+              <div>
+                <span class="inline-block px-3 py-1 rounded-full text-xs font-bold text-wedding-burgundy bg-wedding-burgundy/10 border border-wedding-burgundy/20 mb-1">
+                  11:00
+                </span>
+                <h4 class="font-serifLuxury text-2xl font-bold text-wedding-burgundy">Khai Tiệc Mừng Cưới</h4>
+                <p class="text-xs sm:text-sm text-wedding-charcoal/80 mt-1">
+                  Thưởng thức tiệc ẩm thực tinh hoa cùng lời chúc phúc từ gia đình, người thân và bạn bè thân thương.
+                </p>
+              </div>
+            </div>
+            <!-- Node Icon -->
+            <div class="absolute left-0 md:left-1/2 -translate-x-1/2 w-10 h-10 rounded-full bg-wedding-burgundy border-2 border-wedding-gold flex items-center justify-center text-wedding-goldLight shadow-md z-10">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+            <div class="hidden md:block w-1/2"></div>
+          </div>
+
+          <!-- Event 4 -->
+          <div class="relative flex items-center md:justify-between group">
+            <div class="hidden md:block w-1/2"></div>
+            <!-- Node Icon -->
+            <div class="absolute left-0 md:left-1/2 -translate-x-1/2 w-10 h-10 rounded-full bg-wedding-burgundy border-2 border-wedding-gold flex items-center justify-center text-wedding-goldLight shadow-md z-10">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
+              </svg>
+            </div>
+            <div class="flex items-center w-full md:w-1/2 pl-12 md:pl-12">
+              <div>
+                <span class="inline-block px-3 py-1 rounded-full text-xs font-bold text-wedding-burgundy bg-wedding-burgundy/10 border border-wedding-burgundy/20 mb-1">
+                  11:45
+                </span>
+                <h4 class="font-serifLuxury text-2xl font-bold text-wedding-burgundy">Giao Lưu &amp; Âm Nhạc</h4>
+                <p class="text-xs sm:text-sm text-wedding-charcoal/80 mt-1">
+                  Cùng hòa mình vào giai điệu ngọt ngào, những trò chơi thú vị và những bức ảnh kỷ niệm khó quên.
+                </p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- DRESSCODE PALETTE -->
+      <div class="mt-16 p-6 sm:p-8 rounded-3xl glass-panel text-center max-w-2xl mx-auto border border-wedding-gold/40">
+        <span class="text-xs uppercase tracking-widest text-wedding-gold font-bold block mb-1">Dresscode Gợi Ý</span>
+        <h3 class="font-serifLuxury text-2xl sm:text-3xl font-bold text-wedding-burgundy mb-2">
+          Bảng Màu Trang Phục
+        </h3>
+        <p class="text-xs sm:text-sm text-wedding-charcoal/80 max-w-lg mx-auto mb-6">
+          Để tạo nên những khung hình kỷ niệm hài hòa và ấm áp, gia đình rất mong quý khách lựa chọn trang phục theo bảng màu:
+        </p>
+
+        <!-- Color Swatches -->
+        <div class="flex flex-wrap items-center justify-center gap-4 sm:gap-6 mb-6">
+          
+          <div class="flex flex-col items-center">
+            <div class="w-12 h-12 rounded-full shadow-md border-2 border-wedding-gold" style="background-color: #F5EFE6;"></div>
+            <span class="text-[11px] font-medium text-wedding-charcoal mt-1.5">Be Kem</span>
+          </div>
+
+          <div class="flex flex-col items-center">
+            <div class="w-12 h-12 rounded-full shadow-md border-2 border-wedding-gold" style="background-color: #721121;"></div>
+            <span class="text-[11px] font-medium text-wedding-charcoal mt-1.5">Đỏ Đô</span>
+          </div>
+
+          <div class="flex flex-col items-center">
+            <div class="w-12 h-12 rounded-full shadow-md border-2 border-wedding-cream" style="background-color: #C5A059;"></div>
+            <span class="text-[11px] font-medium text-wedding-charcoal mt-1.5">Champagne</span>
+          </div>
+
+          <div class="flex flex-col items-center">
+            <div class="w-12 h-12 rounded-full shadow-md border-2 border-wedding-gold" style="background-color: #5E0B15;"></div>
+            <span class="text-[11px] font-medium text-wedding-charcoal mt-1.5">Nâu Ấm</span>
+          </div>
+
+          <div class="flex flex-col items-center">
+            <div class="w-12 h-12 rounded-full shadow-md border-2 border-neutral-400" style="background-color: #1C1917;"></div>
+            <span class="text-[11px] font-medium text-wedding-charcoal mt-1.5">Đen Tinh Tế</span>
+          </div>
+
+        </div>
+
+        <p class="text-xs text-wedding-burgundy italic">
+          * Quý khách vui lòng tránh mặc trang phục màu trắng tinh khôi để tôn vinh bộ váy cưới của Cô dâu.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==============================================================================
+       8. ĐỊA ĐIỂM & BẢN ĐỒ GOOGLE MAPS
+       ============================================================================== -->
+  <section id="venue-section" class="py-20 px-4 max-w-5xl mx-auto">
+    <div class="text-center mb-12 gsap-reveal">
+      <span class="font-script text-3xl sm:text-4xl text-wedding-gold block mb-2">Địa Điểm Tổ Chức</span>
+      <div class="w-16 h-0.5 bg-wedding-gold mx-auto mt-4 mb-4"></div>
+    </div>
+
+    <!-- Venue Card -->
+    <div class="glass-panel p-6 sm:p-10 rounded-3xl border border-wedding-gold/40 shadow-xl mb-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+        
+        <!-- Venue Info -->
+        <div>
+          <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider text-wedding-burgundy bg-wedding-burgundy/10 border border-wedding-burgundy/20 mb-3">
+            Trung Tâm Tiệc Cưới
+          </span>
+          <h3 class="font-serifLuxury text-2xl sm:text-3xl font-bold text-wedding-burgundy mb-2">
+            Trống Đồng Palace Cầu Giấy
+          </h3>
+          <p class="text-sm font-semibold text-wedding-gold mb-4">Sảnh Crystal (Tầng 2)</p>
+          
+          <div class="space-y-3 text-xs sm:text-sm text-wedding-charcoal">
+            <div class="flex items-start gap-2.5">
+              <svg class="w-5 h-5 text-wedding-burgundy shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              </svg>
+              <span><strong>Địa chỉ:</strong> Số 72 Trần Đăng Ninh, Phường Dịch Vọng, Quận Cầu Giấy, Hà Nội</span>
+            </div>
+
+            <div class="flex items-start gap-2.5">
+              <svg class="w-5 h-5 text-wedding-burgundy shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+              </svg>
+              <span><strong>Thời gian:</strong> 10:00 - Thứ Bảy, 26/12/2026</span>
+            </div>
+
+            <div class="flex items-start gap-2.5">
+              <svg class="w-5 h-5 text-wedding-burgundy shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              <span>Bãi đỗ xe ô tô và xe máy rộng rãi, có nhân viên hướng dẫn tận tình.</span>
+            </div>
+          </div>
+
+          <!-- Nút Chỉ đường Google Maps -->
+          <div class="mt-6">
+            <a 
+              href="https://maps.app.goo.gl/2Jkdq6iVro3x8sPJ6" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-2 px-6 py-3 rounded-full burgundy-gradient-btn text-xs sm:text-sm font-semibold tracking-wider border border-wedding-gold/40 shadow-md"
+            >
+              <svg class="w-4 h-4 text-wedding-goldLight" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
+              </svg>
+              <span>Chỉ đường trên Google Maps</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Google Maps Iframe với Map Touch Shield chống kẹt cuộn trên điện thoại -->
+        <div id="map-wrapper" class="map-interactive-wrapper h-[280px] sm:h-[340px] border border-wedding-gold/30 shadow-inner">
+          <iframe 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3723.8638558814324!2d105.7909383758717!3d21.03813298061358!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab37482f3c73%3A0xe541743916212e3e!2zVHLhu5FuZyDEkOG7k25nIFBhbGFjZSBD4bqndSBHaeG6pXk!5e0!3m2!1svi!2s!4v1709280000000!5m2!1svi!2s" 
+            class="w-full h-full border-0" 
+            allowfullscreen="" 
+            loading="lazy" 
+            referrerpolicy="no-referrer-when-downgrade"
+            title="Bản đồ Trống Đồng Palace Cầu Giấy"
+          ></iframe>
+          
+          <!-- Shield: Chặn chạm nhầm làm kẹt thao tác cuộn vuốt màn hình của người dùng -->
+          <div id="map-touch-shield" class="map-touch-shield" title="Chạm để tương tác bản đồ">
+            <span class="text-xs bg-wedding-burgundy/80 text-white px-3 py-1.5 rounded-full shadow-lg font-sansApple pointer-events-none">
+              Chạm để tương tác bản đồ
+            </span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==============================================================================
+       9. FORM XÁC NHẬN THAM DỰ (RSVP) & TƯỜNG LỜI CHÚC (GUESTBOOK)
+       ============================================================================== -->
+  <section id="rsvp-section" class="py-20 px-4 bg-wedding-champagne/40">
+    <div class="max-w-3xl mx-auto">
+      
+      <div class="text-center mb-12 gsap-reveal">
+        <span class="font-script text-3xl sm:text-4xl text-wedding-gold block mb-2"></span>
+        <h2 class="font-serifLuxury text-3xl sm:text-4xl md:text-5xl font-bold text-wedding-burgundy">
+          Xác Nhận Tham Dự &amp; Gửi Lời Chúc
+        </h2>
+        <div class="w-16 h-0.5 bg-wedding-gold mx-auto mt-4 mb-4"></div>
+        <p class="text-xs sm:text-sm text-wedding-charcoal max-w-lg mx-auto">
+          Sự hiện diện của bạn là niềm hạnh phúc lớn lao của chúng mình. Xin vui lòng gửi phản hồi để gia đình chuẩn bị đón tiếp chu đáo nhất.
+        </p>
+      </div>
+
+      <!-- Form Container Card -->
+      <div class="glass-panel p-6 sm:p-10 rounded-3xl border border-wedding-gold/40 shadow-xl mb-14">
+        <form id="rsvp-form" class="space-y-6">
+          
+          <!-- Field: Tên khách mời -->
+          <div>
+            <label for="rsvp-name" class="block text-xs uppercase tracking-wider font-semibold text-wedding-burgundy mb-2">
+              Họ và tên của bạn <span class="text-red-500">*</span>
+            </label>
+            <input 
+              type="text" 
+              id="rsvp-name" 
+              required 
+              placeholder="Ví dụ: Anh Nam, Bạn Trang..." 
+              class="w-full px-4 py-3 rounded-xl bg-white/90 border border-wedding-gold/40 focus:border-wedding-burgundy focus:ring-2 focus:ring-wedding-burgundy/20 outline-none text-sm font-sansApple transition-all"
+            />
+          </div>
+
+          <!-- Field: Số điện thoại -->
+          <div>
+            <label for="rsvp-phone" class="block text-xs uppercase tracking-wider font-semibold text-wedding-burgundy mb-2">
+              Số điện thoại liên hệ
+            </label>
+            <input 
+              type="tel" 
+              id="rsvp-phone" 
+              placeholder="Ví dụ: 0912 345 678" 
+              class="w-full px-4 py-3 rounded-xl bg-white/90 border border-wedding-gold/40 focus:border-wedding-burgundy focus:ring-2 focus:ring-wedding-burgundy/20 outline-none text-sm font-sansApple transition-all"
+            />
+          </div>
+
+          <!-- Field: Bạn tham dự được chứ? -->
+          <div>
+            <label class="block text-xs uppercase tracking-wider font-semibold text-wedding-burgundy mb-2">
+              Bạn sẽ tham dự chứ? <span class="text-red-500">*</span>
+            </label>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <label class="flex items-center gap-3 p-3.5 rounded-xl border border-wedding-gold/40 bg-white/80 cursor-pointer hover:bg-white transition-all">
+                <input type="radio" name="attendance" value="yes" checked class="accent-wedding-burgundy w-4 h-4" />
+                <span class="text-sm font-medium text-wedding-dark">Chắc chắn mình sẽ tham dự</span>
+              </label>
+
+              <label class="flex items-center gap-3 p-3.5 rounded-xl border border-wedding-gold/40 bg-white/80 cursor-pointer hover:bg-white transition-all">
+                <input type="radio" name="attendance" value="no" class="accent-wedding-burgundy w-4 h-4" />
+                <span class="text-sm font-medium text-wedding-charcoal">Rất tiếc mình bận không thể đến</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Grid: Số người & Phía khách -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <!-- Số người đi cùng -->
+            <div>
+              <label for="rsvp-guests" class="block text-xs uppercase tracking-wider font-semibold text-wedding-burgundy mb-2">
+                Số người tham dự
+              </label>
+              <select 
+                id="rsvp-guests" 
+                class="w-full px-4 py-3 rounded-xl bg-white/90 border border-wedding-gold/40 focus:border-wedding-burgundy focus:ring-2 focus:ring-wedding-burgundy/20 outline-none text-sm font-sansApple transition-all"
+              >
+                <option value="1">Đi 1 mình (1 người)</option>
+                <option value="2">Đi cùng người thương / Bạn (2 người)</option>
+                <option value="3">Gia đình (3 người)</option>
+                <option value="4+">Gia đình (4 người trở lên)</option>
+              </select>
+            </div>
+
+            <!-- Khách nhà trai hay nhà gái -->
+            <div>
+              <label class="block text-xs uppercase tracking-wider font-semibold text-wedding-burgundy mb-2">
+                Bạn là khách của:
+              </label>
+              <div class="flex items-center gap-4 py-2">
+                <label class="flex items-center gap-2 cursor-pointer text-sm">
+                  <input type="radio" name="side" value="Nhà Trai" checked class="accent-wedding-burgundy w-4 h-4" />
+                  <span>Nhà Trai (Hiệp)</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer text-sm">
+                  <input type="radio" name="side" value="Nhà Gái" class="accent-wedding-burgundy w-4 h-4" />
+                  <span>Nhà Gái (Trang)</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Field: Lời chúc -->
+          <div>
+            <label for="rsvp-message" class="block text-xs uppercase tracking-wider font-semibold text-wedding-burgundy mb-2">
+              Lời chúc gửi tới Cô dâu &amp; Chú rể
+            </label>
+            <textarea 
+              id="rsvp-message" 
+              rows="3" 
+              placeholder="Gửi lời chúc phúc ngọt ngào tới Mạnh Hiệp & Huyền Trang tại đây..."
+              class="w-full px-4 py-3 rounded-xl bg-white/90 border border-wedding-gold/40 focus:border-wedding-burgundy focus:ring-2 focus:ring-wedding-burgundy/20 outline-none text-sm font-sansApple transition-all"
+            ></textarea>
+          </div>
+
+          <!-- Nút Submit -->
+          <div class="text-center pt-2">
+            <button 
+              type="submit" 
+              id="rsvp-submit-btn" 
+              class="w-full sm:w-auto px-10 py-3.5 rounded-full burgundy-gradient-btn text-sm font-semibold tracking-wider uppercase border border-wedding-gold/50 shadow-lg flex items-center justify-center gap-2 mx-auto"
+            >
+              <span id="rsvp-btn-text">Gửi Xác Nhận &amp; Lời Chúc</span>
+              <svg id="rsvp-btn-spinner" class="hidden w-4 h-4 animate-spin text-white" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+              </svg>
+            </button>
+          </div>
+
+        </form>
+      </div>
+
+      <!-- TƯỜNG LỜI CHÚC (GUESTBOOK WALL) -->
+      <div>
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="font-serifLuxury text-2xl font-bold text-wedding-burgundy">
+            Sổ Lưu Bút &amp; Lời Chúc Phúc
+          </h3>
+          <span class="text-xs text-wedding-charcoal/70 uppercase tracking-widest font-medium">Guestbook</span>
+        </div>
+
+        <!-- Guestbook Wishes List Container -->
+        <div id="guestbook-wishes" class="space-y-4">
+          <!-- Wishes will be injected by app.js -->
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==============================================================================
+       MODAL THÔNG BÁO THÀNH CÔNG (RSVP SUCCESS POPUP)
+       ============================================================================== -->
+  <div id="rsvp-success-modal" class="fixed inset-0 z-[10001] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
+    <div class="bg-wedding-cream rounded-3xl max-w-md w-full p-6 sm:p-8 text-center border-2 border-wedding-gold shadow-2xl relative">
+      <div class="w-16 h-16 rounded-full bg-wedding-burgundy/10 border-2 border-wedding-gold flex items-center justify-center mx-auto mb-4 text-wedding-burgundy">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+        </svg>
+      </div>
+
+      <span class="font-script text-3xl text-wedding-gold block mb-1">Thank You!</span>
+      <h3 class="font-serifLuxury text-2xl sm:text-3xl font-bold text-wedding-burgundy mb-3">
+        Đã Gửi Thành Công
+      </h3>
+      
+      <p id="modal-success-desc" class="text-xs sm:text-sm text-wedding-charcoal leading-relaxed mb-6 font-sansApple">
+        Cảm ơn bạn rất nhiều! Sự hiện diện và lời chúc của bạn là niềm vinh hạnh to lớn cho gia đình chúng mình.
+      </p>
+
+      <button 
+        id="modal-success-close" 
+        class="px-8 py-2.5 rounded-full burgundy-gradient-btn text-xs uppercase tracking-wider font-semibold border border-wedding-gold/40 shadow-md"
+      >
+        Đóng lại
+      </button>
+    </div>
+  </div>
+
+  <!-- ==============================================================================
+       10. FOOTER & CLOSING (LỜI CẢM ƠN CUỐI TRANG)
+       ============================================================================== -->
+  <footer class="py-16 px-4 text-center bg-[#2B090E] text-wedding-cream border-t border-wedding-gold/30">
+    <div class="max-w-2xl mx-auto space-y-4">
+      <!-- Footer Logo -->
+      <div class="w-24 h-24 sm:w-32 sm:h-32 md:w-36 md:h-36 mx-auto mb-3 opacity-95 hover:opacity-100 transition-opacity">
+        <img 
+          src="logo-cuoi-H-T-tach-nen-2048px.svg" 
+          alt="Logo H&amp;T" 
+          class="w-full h-full object-contain filter brightness-110 drop-shadow-[0_4px_16px_rgba(197,160,89,0.4)]"
+        />
+      </div>
+
+      <div class="font-script footer-couple-heading text-wedding-goldLight leading-normal">
+        <span class="inline-block whitespace-nowrap">Mạnh Hiệp</span>
+        <span class="inline-block px-1.5 text-wedding-gold">&amp;</span>
+        <span class="inline-block whitespace-nowrap">Huyền Trang</span>
+      </div>
+      
+      <p class="font-serifLuxury text-xl text-wedding-cream/90 italic">
+        “Hẹn gặp lại bạn trong ngày hạnh phúc nhất của chúng mình!”
+      </p>
+
+      <div class="w-12 h-px bg-wedding-gold/50 mx-auto my-4"></div>
+
+      <p class="text-xs text-wedding-cream/60 font-sansApple tracking-widest uppercase">
+        26 . 12 . 2026 | Trống Đồng Palace Cầu Giấy, Hà Nội
+      </p>
+    </div>
+  </footer>
+
+  <!-- Config & Main Application Logic -->
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
