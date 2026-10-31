@@ -3,6 +3,7 @@
  * WEDDING INVITATION APPLICATION SCRIPT
  * Style: Apple Scrollytelling, Lenis Smooth Scroll, GSAP, Canvas Confetti
  * Tone: Warm Beige & Burgundy
+ * Internationalization: Multilingual (Tiếng Việt 🇻🇳 & Français 🇫🇷)
  * ==============================================================================
  */
 
@@ -18,6 +19,8 @@
   let currentTrackIndex = 0;
   let audioInitialized = false;
   let currentLang = "vi";
+  let currentGuestName = "";
+  const dynamicUserWishes = []; // Lưu các lời chúc người dùng vừa gửi trong phiên
 
   // --- 1. INITIALIZATION ON DOM READY ---
   document.addEventListener("DOMContentLoaded", () => {
@@ -45,23 +48,44 @@
     const params = new URLSearchParams(window.location.search);
     const guestParam = params.get("to") || params.get("guest") || params.get("name");
 
+    if (guestParam) {
+      currentGuestName = decodeURIComponent(guestParam.replace(/\+/g, " ")).trim();
+      const rsvpNameInput = document.getElementById("rsvp-name");
+      if (rsvpNameInput) {
+        rsvpNameInput.value = currentGuestName;
+      }
+    } else {
+      currentGuestName = ""; // Không có khách mời riêng qua URL -> Dùng danh xưng mặc định của từng ngôn ngữ
+    }
+
+    updatePersonalizedGreeting(currentLang);
+  }
+
+  function updatePersonalizedGreeting(lang) {
+    const langs = WEDDING_CONFIG.i18n.languages || {};
+    const dict = langs[lang] || langs.vi || {};
+
     const guestGreetingEl = document.getElementById("envelope-guest-name");
-    const rsvpNameInput = document.getElementById("rsvp-name");
     const heroGuestGreetingEl = document.getElementById("hero-guest-name");
 
-    let formattedName = WEDDING_CONFIG.rsvp.defaultGuestName;
-    if (guestParam) {
-      formattedName = decodeURIComponent(guestParam.replace(/\+/g, " ")).trim();
-    }
-
-    if (guestGreetingEl) {
-      guestGreetingEl.textContent = `Trân trọng kính mời: ${formattedName}`;
-    }
-    if (heroGuestGreetingEl) {
-      heroGuestGreetingEl.textContent = `Kính gửi: ${formattedName}`;
-    }
-    if (rsvpNameInput && guestParam) {
-      rsvpNameInput.value = formattedName;
+    if (currentGuestName) {
+      // Có tên riêng được truyền qua URL (?to=David / ?name=Trang...)
+      const prefixEnvelope = dict.envelope_guest_prefix || "Trân trọng kính mời: ";
+      const prefixHero = dict.hero_guest_prefix || "Kính gửi: ";
+      if (guestGreetingEl) {
+        guestGreetingEl.textContent = `${prefixEnvelope}${currentGuestName}`;
+      }
+      if (heroGuestGreetingEl) {
+        heroGuestGreetingEl.textContent = `${prefixHero}${currentGuestName}`;
+      }
+    } else {
+      // Mặc định (truy cập thông thường) -> Hiển thị đúng danh xưng chuẩn của ngôn ngữ đang chọn
+      if (guestGreetingEl) {
+        guestGreetingEl.textContent = dict.envelope_guest_name || "Trân trọng kính mời: Quý khách";
+      }
+      if (heroGuestGreetingEl) {
+        heroGuestGreetingEl.textContent = dict.hero_guest_name || "Kính gửi: Quý khách";
+      }
     }
   }
 
@@ -71,57 +95,115 @@
     const savedLang = localStorage.getItem("wedding-lang") || cfg.defaultLang || "vi";
     currentLang = savedLang;
 
+    // Cập nhật trạng thái active của nút cờ
+    updateFlagButtonsUI(currentLang);
+
     // Áp dụng ngôn ngữ đã lưu
     translate(currentLang);
 
-    // Sự kiện click nút cờ
+    // Sự kiện click nút chọn ngôn ngữ
     document.querySelectorAll(".lang-btn").forEach((btn) => {
-      btn.addEventListener("click", (e) => {
+      btn.addEventListener("click", () => {
         const lang = btn.getAttribute("data-lang");
-        if (!lang) return;
-
-        // Cập nhật UI nút cờ
-        document.querySelectorAll(".lang-btn").forEach((b) => {
-          if (b.getAttribute("data-lang") === lang) {
-            b.classList.add("lang-active");
-            b.classList.remove("bg-transparent", "text-wedding-goldLight/70");
-            b.classList.add("bg-wedding-gold/10", "text-wedding-goldLight");
-          } else {
-            b.classList.remove("lang-active");
-            b.classList.remove("bg-wedding-gold/10", "text-wedding-goldLight");
-            b.classList.add("bg-transparent", "text-wedding-goldLight/70");
-          }
-        });
+        if (!lang || lang === currentLang) return;
 
         currentLang = lang;
         localStorage.setItem("wedding-lang", lang);
+        updateFlagButtonsUI(lang);
         translate(lang);
       });
     });
   }
 
+  function updateFlagButtonsUI(lang) {
+    document.querySelectorAll(".lang-btn").forEach((b) => {
+      if (b.getAttribute("data-lang") === lang) {
+        b.classList.add("lang-active", "bg-wedding-gold/20", "text-wedding-goldLight");
+        b.classList.remove("bg-transparent", "text-wedding-goldLight/70");
+      } else {
+        b.classList.remove("lang-active", "bg-wedding-gold/20", "text-wedding-goldLight");
+        b.classList.add("bg-transparent", "text-wedding-goldLight/70");
+      }
+    });
+  }
+
   // Dịch toàn bộ trang theo mã ngôn ngữ
   function translate(lang) {
+    currentLang = lang;
     const langs = WEDDING_CONFIG.i18n.languages || {};
     const dict = langs[lang] || langs.vi || {};
 
-    // Dịch các phần tử có data-i18n
+    // Cập nhật lang thuộc tính của html
+    document.documentElement.lang = lang;
+
+    // 1. Dịch innerHTML cho các phần tử có [data-i18n]
     document.querySelectorAll("[data-i18n]").forEach((el) => {
       const key = el.getAttribute("data-i18n");
-      if (dict[key]) {
+      if (dict[key] !== undefined) {
         el.innerHTML = dict[key];
       }
     });
 
-    // Cập nhật thẻ <title> và meta description
-    if (dict.seo_title) document.title = dict.seo_title;
-    const metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc && dict.seo_description) metaDesc.setAttribute("content", dict.seo_description);
+    // 2. Dịch placeholder cho các trường input & textarea có [data-i18n-placeholder]
+    document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
+      const key = el.getAttribute("data-i18n-placeholder");
+      if (dict[key] !== undefined) {
+        el.setAttribute("placeholder", dict[key]);
+      }
+    });
 
-    // Cập nhật các phần âm thanh (nút play/pause text)
-    const audioLabel = document.getElementById("audio-label");
-    if (audioLabel) {
-      audioLabel.textContent = isAudioPlaying ? dict.audio_btn_mute_on : dict.audio_btn_mute_off;
+    // 3. Dịch title cho các phần tử có [data-i18n-title]
+    document.querySelectorAll("[data-i18n-title]").forEach((el) => {
+      const key = el.getAttribute("data-i18n-title");
+      if (dict[key] !== undefined) {
+        el.setAttribute("title", dict[key]);
+      }
+    });
+
+    // 4. Dịch aria-label cho các phần tử có [data-i18n-aria-label]
+    document.querySelectorAll("[data-i18n-aria-label]").forEach((el) => {
+      const key = el.getAttribute("data-i18n-aria-label");
+      if (dict[key] !== undefined) {
+        el.setAttribute("aria-label", dict[key]);
+      }
+    });
+
+    // 5. Dịch alt text cho hình ảnh có [data-i18n-alt]
+    document.querySelectorAll("[data-i18n-alt]").forEach((el) => {
+      const key = el.getAttribute("data-i18n-alt");
+      if (dict[key] !== undefined) {
+        el.setAttribute("alt", dict[key]);
+      }
+    });
+
+    // 6. Cập nhật thẻ <title> và meta description
+    if (dict.seo_title) {
+      document.title = dict.seo_title;
+    }
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc && dict.seo_description) {
+      metaDesc.setAttribute("content", dict.seo_description);
+    }
+    const ogTitle = document.querySelector('meta[property="og:title"]');
+    if (ogTitle && dict.seo_title) {
+      ogTitle.setAttribute("content", dict.seo_title);
+    }
+    const ogDesc = document.querySelector('meta[property="og:description"]');
+    if (ogDesc && dict.seo_description) {
+      ogDesc.setAttribute("content", dict.seo_description);
+    }
+
+    // 7. Cập nhật các thành phần động
+    updatePersonalizedGreeting(lang);
+    updateAudioUI();
+    renderGallery(lang);
+    renderGuestbookWishes(lang);
+
+    // Cập nhật text nút gửi form nếu form không trong trạng thái loading
+    const submitBtn = document.getElementById("rsvp-submit-btn");
+    const btnText = document.getElementById("rsvp-btn-text");
+    if (btnText && (!submitBtn || !submitBtn.disabled)) {
+      btnText.innerHTML = dict.rsvp_submit || "Gửi Xác Nhận &amp; Lời Chúc";
     }
   }
 
@@ -129,10 +211,9 @@
   function initAudio() {
     const cfg = WEDDING_CONFIG.audio;
     const playlist = cfg.playlist || [];
-    const basePath = cfg.basePath || "/audio/";
+    const basePath = cfg.basePath || "audio/";
 
     if (!playlist.length) {
-      // Không có playlist → dùng fallbackSrc đơn lẻ
       bgMusicAudio = new Audio(cfg.fallbackSrc || "");
       bgMusicAudio.loop = true;
       bgMusicAudio.preload = "auto";
@@ -141,19 +222,16 @@
       return;
     }
 
-    // Khởi tạo với bài đầu tiên
     const firstSrc = basePath + playlist[0].file;
     bgMusicAudio = new Audio(firstSrc);
-    bgMusicAudio.loop = false; // tự chuyển bài khi kết thúc
+    bgMusicAudio.loop = false;
     bgMusicAudio.preload = "auto";
 
-    // Khi bài kết thúc → tự phát bài tiếp theo
     bgMusicAudio.addEventListener("ended", () => {
       if (!cfg.loopPlaylist) return;
       playNext();
     });
 
-    // Lỗi tải file (ví dụ file mp3 không tồn tại)
     bgMusicAudio.addEventListener("error", (e) => {
       console.warn("Lỗi tải audio:", e);
     });
@@ -163,7 +241,6 @@
     audioInitialized = true;
   }
 
-  // Gán sự kiện cho các nút điều khiển
   function bindAudioControls() {
     const audioPill = document.getElementById("audio-control-pill");
     const btnPrev = document.getElementById("audio-prev");
@@ -171,7 +248,6 @@
 
     if (!audioPill) return;
 
-    // Click vào thân nút (không phải nút prev/next/play-pause) → play/pause
     audioPill.addEventListener("click", (e) => {
       if (e.target.closest("#audio-prev") || e.target.closest("#audio-next") || e.target.closest("#audio-play-pause")) return;
       toggleAudio();
@@ -194,18 +270,20 @@
     });
   }
 
-  // Cập nhật tên bài / ca sĩ trên giao diện
   function updateAudioUI() {
     const cfg = WEDDING_CONFIG.audio;
     const playlist = cfg.playlist || [];
     const titleEl = document.getElementById("audio-title");
     const artistEl = document.getElementById("audio-artist");
+    const dict = (WEDDING_CONFIG.i18n.languages || {})[currentLang] || {};
+
+    const trackPrefix = dict.audio_title_prefix || "Bài";
+    const trackOf = dict.audio_of || "/";
 
     if (playlist.length && playlist[currentTrackIndex]) {
       const t = playlist[currentTrackIndex];
       if (titleEl) {
         titleEl.textContent = t.title;
-        // Chỉ bật marquee khi text quá dài so với container
         if (titleEl.scrollWidth > titleEl.clientWidth) {
           titleEl.classList.add("marquee");
         } else {
@@ -214,7 +292,7 @@
         }
       }
       if (artistEl) {
-        artistEl.textContent = `${t.artist}  •  Bài ${currentTrackIndex + 1} / ${playlist.length}`;
+        artistEl.textContent = `${t.artist}  •  ${trackPrefix} ${currentTrackIndex + 1} ${trackOf} ${playlist.length}`;
         if (artistEl.scrollWidth > artistEl.clientWidth) {
           artistEl.classList.add("marquee");
         } else {
@@ -224,7 +302,7 @@
       }
     } else {
       if (titleEl) {
-        titleEl.textContent = cfg.title || "Nhạc nền";
+        titleEl.textContent = cfg.title || dict.audio_default_title || "Nhạc nền";
         titleEl.classList.remove("marquee");
         titleEl.style.animation = "none";
       }
@@ -234,13 +312,17 @@
         artistEl.style.animation = "none";
       }
     }
+
+    const audioLabel = document.getElementById("audio-label");
+    if (audioLabel) {
+      audioLabel.textContent = isAudioPlaying ? (dict.audio_btn_mute_on || "Tạm dừng") : (dict.audio_btn_mute_off || "Bật nhạc");
+    }
   }
 
-  // Load bài theo index (relative đến basePath)
   function loadTrack(index) {
     const cfg = WEDDING_CONFIG.audio;
     const playlist = cfg.playlist || [];
-    const basePath = cfg.basePath || "/audio/";
+    const basePath = cfg.basePath || "audio/";
 
     if (!playlist.length) return;
 
@@ -258,7 +340,6 @@
     }
   }
 
-  // Bài tiếp theo
   function playNext() {
     const playlist = WEDDING_CONFIG.audio.playlist || [];
     if (!playlist.length) return;
@@ -276,18 +357,15 @@
     }
   }
 
-  // Bài trước
   function playPrev() {
     const playlist = WEDDING_CONFIG.audio.playlist || [];
     if (!playlist.length) return;
     loadTrack(currentTrackIndex - 1);
   }
 
-  // Bật / tắt âm thanh (yêu cầu user gesture)
   function toggleAudio() {
     if (!bgMusicAudio) return;
 
-    const btnPlayPause = document.getElementById("audio-play-pause");
     const playImg = document.getElementById("audio-play-pause-img");
     const dict = (WEDDING_CONFIG.i18n.languages || {})[currentLang] || {};
 
@@ -310,7 +388,7 @@
     }
   }
 
-  // --- 4. ENVELOPE / SPLASH SCREEN OPEN ANIMATION (APPLE-GRADE CHOREOGRAPHY) ---
+  // --- 4. ENVELOPE / SPLASH SCREEN OPEN ANIMATION ---
   function initEnvelope() {
     const envelopeScreen = document.getElementById("envelope-screen");
     const envelopeWrapper = document.getElementById("envelope-wrapper");
@@ -320,17 +398,15 @@
 
     if (!envelopeScreen || !envelopeWrapper) return;
 
-    const triggerOpen = (e) => {
+    const triggerOpen = () => {
       if (isEnvelopeOpened) return;
       isEnvelopeOpened = true;
 
-      // Luôn đặt trang web về đúng đỉnh đầu (Hero Section), triệt tiêu lỗi bị nhảy xuống chân trang
       window.scrollTo(0, 0);
       if (lenisInstance) {
         lenisInstance.scrollTo(0, { immediate: true });
       }
 
-      // Tính toán tọa độ chính xác của con dấu để bắn pháo hoa từ đúng tâm con dấu
       let originX = 0.5;
       let originY = 0.5;
       if (waxSeal) {
@@ -339,7 +415,6 @@
         originY = (rect.top + rect.height / 2) / window.innerHeight;
       }
 
-      // Kích hoạt phát nhạc nền mượt mà với volume ramp tăng dần
       if (bgMusicAudio && WEDDING_CONFIG.audio.autoplayOnOpen) {
         try {
           bgMusicAudio.volume = 0;
@@ -348,23 +423,21 @@
             updateAudioUI();
             const soundWave = document.querySelector(".sound-wave");
             const audioLabel = document.getElementById("audio-label");
+            const dict = (WEDDING_CONFIG.i18n.languages || {})[currentLang] || {};
             if (soundWave) soundWave.classList.add("playing");
-            if (audioLabel) audioLabel.textContent = "Đang phát";
+            if (audioLabel) audioLabel.textContent = dict.audio_playing_status || "Đang phát";
 
-            const btnPlayPause = document.getElementById("audio-play-pause");
             const playImg = document.getElementById("audio-play-pause-img");
             if (playImg) {
               playImg.src = "icons/pause.png";
             }
 
-            // Hiện thanh điều khiển nhạc sau khi mở thiệp
             const audioBar = document.getElementById("audio-control-pill");
             if (audioBar) {
               audioBar.classList.remove("hidden");
               audioBar.classList.add("shown");
             }
 
-            // Tăng âm lượng êm dịu từ 0 lên 0.75 trong 1.5s
             gsap.to(bgMusicAudio, { volume: 0.75, duration: 1.5, ease: "power1.out" });
           }).catch((err) => console.log("Audio unlock:", err));
         } catch (err) {
@@ -372,7 +445,6 @@
         }
       }
 
-      // GSAP Master Timeline 60fps đồng bộ hoá mượt mà
       const masterTl = gsap.timeline({
         onStart: () => {
           window.scrollTo(0, 0);
@@ -386,17 +458,17 @@
             lenisInstance.resize();
             lenisInstance.scrollTo(0, { immediate: true });
           }
-          ScrollTrigger.refresh();
+          if (typeof ScrollTrigger !== "undefined") {
+            ScrollTrigger.refresh();
+          }
         }
       });
 
-      // Giai đoạn 1: Nén lực xúc giác (Haptic press) lên con dấu sáp
       masterTl.to(waxSeal, {
         scale: 0.88,
         duration: 0.16,
         ease: "power2.in"
       })
-      // Giai đoạn 2: Con dấu phát sáng bừng lên và vỡ ra thành ánh sáng kim tuyến
       .to(waxSeal, {
         scale: 1.35,
         opacity: 0,
@@ -407,13 +479,11 @@
           fireEpicSealBurst(originX, originY);
         }
       })
-      // Giai đoạn 3: Nắp phong bì tam giác mở lật 3D 180 độ
       .to(flap, {
         rotateX: 180,
         duration: 0.75,
         ease: "power3.inOut"
       }, "-=0.25")
-      // Giai đoạn 4: Camera Push-in (Phong bì phóng to nhẹ và lướt mờ vào ống kính)
       .to(envelopeWrapper, {
         scale: 1.15,
         y: -18,
@@ -422,13 +492,11 @@
         duration: 0.7,
         ease: "power2.inOut"
       }, "-=0.45")
-      // Giai đoạn 5: Màn hình chờ hòa tan (Crossfade) nhẹ nhàng vào Hero Section
       .to(envelopeScreen, {
         opacity: 0,
         duration: 0.65,
         ease: "power2.inOut"
       }, "-=0.45")
-      // Giai đoạn 6: Hero Section thức giấc (Staggered Apple Reveal)
       .fromTo(".hero-badge", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, "-=0.35")
       .fromTo(".hero-title-main", { opacity: 0, y: 40, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.95, ease: "power3.out" }, "-=0.6")
       .fromTo(".hero-monogram-circle", { opacity: 0, scale: 0.6, rotation: -20 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.85, ease: "back.out(2)" }, "-=0.65")
@@ -443,13 +511,12 @@
     });
   }
 
-  // --- 5. CANVAS CONFETTI (STARBURST FROM SEAL + ROYAL FLURRY) ---
+  // --- 5. CANVAS CONFETTI ---
   function fireEpicSealBurst(originX = 0.5, originY = 0.5) {
     if (typeof confetti !== "function") return;
 
     const colors = ["#800020", "#721121", "#C5A059", "#DFCA95", "#F9F6F0"];
 
-    // Particle starburst tỏa ra từ đúng tâm con dấu
     confetti({
       particleCount: 65,
       spread: 100,
@@ -460,7 +527,6 @@
       scalar: 1.1
     });
 
-    // Pháo giấy đại tiệc bắn từ 2 mép màn hình sau 220ms
     setTimeout(() => {
       confetti({
         particleCount: 70,
@@ -515,17 +581,7 @@
   }
 
   // --- 7. GSAP SCROLLYTELLING ANIMATIONS ---
-  function animateHeroEntrance() {
-    const tl = gsap.timeline();
-    tl.from(".hero-badge", { opacity: 0, y: 20, duration: 0.8, ease: "power3.out" })
-      .from(".hero-title-main", { opacity: 0, y: 35, duration: 1, ease: "power3.out" }, "-=0.5")
-      .from(".hero-monogram-circle", { opacity: 0, scale: 0.8, duration: 0.8, ease: "back.out(1.7)" }, "-=0.6")
-      .from(".hero-date-box", { opacity: 0, y: 25, duration: 0.8, ease: "power3.out" }, "-=0.5")
-      .from(".hero-scroll-hint", { opacity: 0, y: 15, duration: 0.6, ease: "power3.out" }, "-=0.3");
-  }
-
   function initScrollytellingAnimations() {
-    // Parallax trên Hero Background Image
     const heroImg = document.querySelector(".hero-bg-image");
     if (heroImg) {
       gsap.to(heroImg, {
@@ -540,7 +596,6 @@
       });
     }
 
-    // Text Reveal on Scroll (Câu chuyện tình yêu & Lời dẫn)
     const revealItems = document.querySelectorAll(".gsap-reveal");
     revealItems.forEach((el) => {
       gsap.from(el, {
@@ -556,7 +611,6 @@
       });
     });
 
-    // HIỆU ỨNG CHUYỂN NỀN ĐỎ ĐÔ (BURGUNDY TRANSITION) Ở SECTION VIDEO
     const videoSection = document.getElementById("video-section");
     const videoFrame = document.querySelector(".video-container-frame");
 
@@ -603,7 +657,6 @@
         }
       });
 
-      // Video Scale-up effect kiểu Apple Keynote
       if (videoFrame) {
         gsap.fromTo(
           videoFrame,
@@ -670,11 +723,9 @@
     const eventDetails = encodeURIComponent(`Trân trọng kính mời quý khách tới chung vui cùng gia đình chúng mình tại ${WEDDING_CONFIG.event.venue.name}.\nĐịa chỉ: ${WEDDING_CONFIG.event.venue.address}`);
     const eventLocation = encodeURIComponent(`${WEDDING_CONFIG.event.venue.name}, ${WEDDING_CONFIG.event.venue.address}`);
     
-    // Ngày giờ UTC: 26/12/2026 10:00 (GMT+7) = 26/12/2026 03:00 UTC
     const startTimeUtc = "20261226T030000Z";
     const endTimeUtc = "20261226T070000Z";
 
-    // 1. Google Calendar link
     if (btnGoogleCal) {
       btnGoogleCal.addEventListener("click", () => {
         const googleCalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${eventTitle}&dates=${startTimeUtc}/${endTimeUtc}&details=${eventDetails}&location=${eventLocation}`;
@@ -682,7 +733,6 @@
       });
     }
 
-    // 2. Apple / Outlook iCalendar (.ics) download
     if (btnIcsCal) {
       btnIcsCal.addEventListener("click", () => {
         const icsContent = [
@@ -720,22 +770,41 @@
 
   // --- 10. PHOTO GALLERY & LIGHTBOX ---
   function initGalleryAndLightbox() {
-    const galleryGrid = document.getElementById("gallery-grid");
     const lightboxModal = document.getElementById("lightbox-modal");
-    const lightboxImg = document.getElementById("lightbox-img");
-    const lightboxTitle = document.getElementById("lightbox-title");
-    const lightboxSubtitle = document.getElementById("lightbox-subtitle");
     const btnClose = document.getElementById("lightbox-close");
     const btnPrev = document.getElementById("lightbox-prev");
     const btnNext = document.getElementById("lightbox-next");
 
-    if (!galleryGrid || !lightboxModal) return;
+    renderGallery(currentLang);
 
-    // Render Dynamic Gallery Items
+    if (btnClose) btnClose.addEventListener("click", closeLightbox);
+    if (btnPrev) btnPrev.addEventListener("click", showPrevLightbox);
+    if (btnNext) btnNext.addEventListener("click", showNextLightbox);
+
+    if (lightboxModal) {
+      lightboxModal.addEventListener("click", (e) => {
+        if (e.target === lightboxModal || e.target.classList.contains("lightbox-backdrop")) {
+          closeLightbox();
+        }
+      });
+    }
+
+    window.addEventListener("keydown", (e) => {
+      if (!lightboxModal || !lightboxModal.classList.contains("active")) return;
+      if (e.key === "Escape") closeLightbox();
+      if (e.key === "ArrowLeft") showPrevLightbox();
+      if (e.key === "ArrowRight") showNextLightbox();
+    });
+  }
+
+  function renderGallery(lang) {
+    const galleryGrid = document.getElementById("gallery-grid");
+    if (!galleryGrid || !WEDDING_CONFIG.gallery) return;
+
     galleryGrid.innerHTML = "";
+
     WEDDING_CONFIG.gallery.forEach((item, index) => {
       const card = document.createElement("div");
-      // Apple Bento Grid span classes
       let spanClass = "col-span-1 md:col-span-1 row-span-1";
       if (item.aspect === "tall") {
         spanClass = "col-span-1 md:col-span-1 md:row-span-2 h-[380px] md:h-[500px]";
@@ -748,22 +817,25 @@
       card.className = `bento-card ${spanClass} group`;
       card.setAttribute("data-index", index);
 
-      // Chuyển link Google Drive sang Direct URL
       const directSrc = parseGoogleDriveUrl(item.src);
       const fallbackSrc = "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=80";
+
+      const title = (lang !== "vi" && item["title_" + lang]) ? item["title_" + lang] : item.title;
+      const subtitle = (lang !== "vi" && item["subtitle_" + lang]) ? item["subtitle_" + lang] : (item.subtitle || "");
+      const desc = (lang !== "vi" && item["desc_" + lang]) ? item["desc_" + lang] : (item.desc || "");
 
       card.innerHTML = `
         <img 
           src="${directSrc}" 
-          alt="${item.title}" 
+          alt="${title}" 
           loading="lazy" 
           class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           onerror="this.onerror=null; this.src='${fallbackSrc}';"
         />
         <div class="bento-overlay">
-          <span class="text-xs tracking-widest uppercase text-[#C5A059] font-medium mb-1">${item.subtitle || ""}</span>
-          <h4 class="font-serif-luxury text-xl md:text-2xl text-[#F9F6F0] font-semibold">${item.title}</h4>
-          ${item.desc ? `<p class="text-xs text-[#EBE3D5] opacity-90 mt-1">${item.desc}</p>` : ""}
+          <span class="text-xs tracking-widest uppercase text-[#C5A059] font-medium mb-1">${subtitle}</span>
+          <h4 class="font-serifLuxury text-xl md:text-2xl text-[#F9F6F0] font-semibold">${title}</h4>
+          ${desc ? `<p class="text-xs text-[#EBE3D5] opacity-90 mt-1">${desc}</p>` : ""}
         </div>
       `;
 
@@ -771,57 +843,57 @@
       galleryGrid.appendChild(card);
     });
 
-    function openLightbox(index) {
-      activeLightboxIndex = index;
+    // Nếu lightbox đang mở, cập nhật luôn nội dung
+    const lightboxModal = document.getElementById("lightbox-modal");
+    if (lightboxModal && lightboxModal.classList.contains("active")) {
       updateLightboxContent();
-      lightboxModal.classList.add("active");
-      document.body.style.overflow = "hidden";
     }
+  }
 
-    function closeLightbox() {
-      lightboxModal.classList.remove("active");
-      document.body.style.overflow = "";
-    }
+  function openLightbox(index) {
+    const lightboxModal = document.getElementById("lightbox-modal");
+    if (!lightboxModal) return;
+    activeLightboxIndex = index;
+    updateLightboxContent();
+    lightboxModal.classList.add("active");
+    document.body.style.overflow = "hidden";
+  }
 
-    function updateLightboxContent() {
-      const item = WEDDING_CONFIG.gallery[activeLightboxIndex];
-      if (!item) return;
+  function closeLightbox() {
+    const lightboxModal = document.getElementById("lightbox-modal");
+    if (!lightboxModal) return;
+    lightboxModal.classList.remove("active");
+    document.body.style.overflow = "";
+  }
 
-      const directSrc = parseGoogleDriveUrl(item.src);
+  function updateLightboxContent() {
+    const lightboxImg = document.getElementById("lightbox-img");
+    const lightboxTitle = document.getElementById("lightbox-title");
+    const lightboxSubtitle = document.getElementById("lightbox-subtitle");
+    const item = WEDDING_CONFIG.gallery[activeLightboxIndex];
+    if (!item) return;
+
+    const lang = currentLang;
+    const title = (lang !== "vi" && item["title_" + lang]) ? item["title_" + lang] : item.title;
+    const subtitle = (lang !== "vi" && item["subtitle_" + lang]) ? item["subtitle_" + lang] : (item.subtitle || item.desc || "");
+
+    const directSrc = parseGoogleDriveUrl(item.src);
+    if (lightboxImg) {
       lightboxImg.src = directSrc;
-      lightboxImg.alt = item.title;
-      if (lightboxTitle) lightboxTitle.textContent = item.title;
-      if (lightboxSubtitle) lightboxSubtitle.textContent = item.subtitle || item.desc || "";
+      lightboxImg.alt = title;
     }
+    if (lightboxTitle) lightboxTitle.textContent = title;
+    if (lightboxSubtitle) lightboxSubtitle.textContent = subtitle;
+  }
 
-    function showPrev() {
-      activeLightboxIndex = (activeLightboxIndex - 1 + WEDDING_CONFIG.gallery.length) % WEDDING_CONFIG.gallery.length;
-      updateLightboxContent();
-    }
+  function showPrevLightbox() {
+    activeLightboxIndex = (activeLightboxIndex - 1 + WEDDING_CONFIG.gallery.length) % WEDDING_CONFIG.gallery.length;
+    updateLightboxContent();
+  }
 
-    function showNext() {
-      activeLightboxIndex = (activeLightboxIndex + 1) % WEDDING_CONFIG.gallery.length;
-      updateLightboxContent();
-    }
-
-    if (btnClose) btnClose.addEventListener("click", closeLightbox);
-    if (btnPrev) btnPrev.addEventListener("click", showPrev);
-    if (btnNext) btnNext.addEventListener("click", showNext);
-
-    // Click outside to close
-    lightboxModal.addEventListener("click", (e) => {
-      if (e.target === lightboxModal || e.target.classList.contains("lightbox-backdrop")) {
-        closeLightbox();
-      }
-    });
-
-    // Keyboard navigation
-    window.addEventListener("keydown", (e) => {
-      if (!lightboxModal.classList.contains("active")) return;
-      if (e.key === "Escape") closeLightbox();
-      if (e.key === "ArrowLeft") showPrev();
-      if (e.key === "ArrowRight") showNext();
-    });
+  function showNextLightbox() {
+    activeLightboxIndex = (activeLightboxIndex + 1) % WEDDING_CONFIG.gallery.length;
+    updateLightboxContent();
   }
 
   // --- 11. TIMELINE SCROLL PROGRESS ---
@@ -842,7 +914,7 @@
     });
   }
 
-  // --- 12. MAP TOUCH SHIELD (PREVENT SCROLL JACKING ON MOBILE) ---
+  // --- 12. MAP TOUCH SHIELD ---
   function initMapShield() {
     const shield = document.getElementById("map-touch-shield");
     const mapWrapper = document.getElementById("map-wrapper");
@@ -853,7 +925,6 @@
       shield.classList.add("shield-disabled");
     });
 
-    // Khi người dùng cuộn chuột ra khỏi khu vực bản đồ thì tự động khóa lại để bảo vệ cuộn
     mapWrapper.addEventListener("mouseleave", () => {
       shield.classList.remove("shield-disabled");
     });
@@ -862,26 +933,20 @@
   // --- 13. RSVP FORM & LIVE GUESTBOOK ---
   function initRSVPAndGuestbook() {
     const rsvpForm = document.getElementById("rsvp-form");
-    const guestbookContainer = document.getElementById("guestbook-wishes");
     const submitBtn = document.getElementById("rsvp-submit-btn");
     const btnText = document.getElementById("rsvp-btn-text");
     const btnSpinner = document.getElementById("rsvp-btn-spinner");
     const rsvpModal = document.getElementById("rsvp-success-modal");
     const modalClose = document.getElementById("modal-success-close");
 
-    // Render initial guestbook wishes from config
-    if (guestbookContainer && WEDDING_CONFIG.rsvp.initialWishes) {
-      guestbookContainer.innerHTML = "";
-      WEDDING_CONFIG.rsvp.initialWishes.forEach((wish) => {
-        appendWishToWall(wish.name, wish.side, wish.content, wish.time);
-      });
-    }
+    renderGuestbookWishes(currentLang);
 
     if (!rsvpForm) return;
 
     rsvpForm.addEventListener("submit", async (e) => {
       e.preventDefault();
 
+      const dict = (WEDDING_CONFIG.i18n.languages || {})[currentLang] || {};
       const name = document.getElementById("rsvp-name").value.trim();
       const phone = document.getElementById("rsvp-phone").value.trim();
       const attendance = document.querySelector('input[name="attendance"]:checked')?.value || "yes";
@@ -890,21 +955,26 @@
       const message = document.getElementById("rsvp-message").value.trim();
 
       if (!name) {
-        alert("Vui lòng nhập họ và tên của bạn!");
+        alert(dict.rsvp_alert_name || "Vui lòng nhập họ và tên của bạn!");
         return;
       }
 
-      // Set loading state
       if (submitBtn) submitBtn.disabled = true;
-      if (btnText) btnText.textContent = "Đang gửi...";
+      if (btnText) btnText.textContent = dict.rsvp_submitting || "Đang gửi...";
       if (btnSpinner) btnSpinner.classList.remove("hidden");
+
+      const sideKey = side === "Nhà Trai" ? "rsvp_side_groom" : "rsvp_side_bride";
+      const sideLabel = dict[sideKey] || side;
+      const attendanceText = attendance === "yes" 
+        ? (dict.rsvp_yes || "Có tham dự") 
+        : (dict.rsvp_no || "Rất tiếc không thể tham dự");
 
       const payload = {
         name,
         phone,
-        attendance: attendance === "yes" ? "Có tham dự" : "Rất tiếc không thể tham dự",
+        attendance: attendanceText,
         guestsCount,
-        side,
+        side: sideLabel,
         message,
         timestamp: new Date().toISOString()
       };
@@ -913,7 +983,6 @@
 
       try {
         if (hasScriptUrl && !WEDDING_CONFIG.rsvp.mockMode) {
-          // Gửi dữ liệu thật tới Google Apps Script Web App
           await fetch(WEDDING_CONFIG.rsvp.googleScriptUrl, {
             method: "POST",
             mode: "no-cors",
@@ -923,44 +992,55 @@
             body: JSON.stringify(payload)
           });
         } else {
-          // MOCK MODE: Giả lập độ trễ mạng thực tế 650ms để người dùng trải nghiệm trọn vẹn
           console.log("[RSVP Mock Mode Activated] Data captured:", payload);
           await new Promise((resolve) => setTimeout(resolve, 650));
         }
 
-        // Bắn pháo giấy chúc mừng
         fireWeddingConfetti();
 
-        // Thêm lời chúc vào Guestbook Wall ngay lập tức
         if (message) {
-          appendWishToWall(name, side, message, "Vừa xong", true);
+          const newWishObj = {
+            name,
+            side: sideLabel,
+            content: message,
+            time: dict.guestbook_just_now || "Vừa xong",
+            isNew: true
+          };
+          dynamicUserWishes.unshift(newWishObj);
+          renderGuestbookWishes(currentLang);
         }
 
-        // Hiển thị modal thành công
+        const successMsg = WEDDING_CONFIG.rsvp["successMessage_" + currentLang] || dict.guestbook_modal_desc || WEDDING_CONFIG.rsvp.successMessage;
         if (rsvpModal) {
           const modalDesc = document.getElementById("modal-success-desc");
           if (modalDesc) {
-            modalDesc.textContent = WEDDING_CONFIG.rsvp.successMessage;
+            modalDesc.textContent = successMsg;
           }
           rsvpModal.classList.add("active");
         } else {
-          alert(WEDDING_CONFIG.rsvp.successMessage);
+          alert(successMsg);
         }
 
-        // Reset form (giữ lại tên nếu có từ URL)
-        const currentName = document.getElementById("rsvp-name").value;
+        const currentNameVal = document.getElementById("rsvp-name").value;
         rsvpForm.reset();
-        document.getElementById("rsvp-name").value = currentName;
+        document.getElementById("rsvp-name").value = currentNameVal;
 
       } catch (err) {
         console.error("Lỗi gửi RSVP:", err);
-        alert("Có lỗi nhỏ khi gửi phản hồi, nhưng lời chúc của bạn đã được ghi nhận trên giao diện. Cảm ơn bạn!");
+        alert(dict.rsvp_alert_error || "Có lỗi nhỏ khi gửi phản hồi, nhưng lời chúc của bạn đã được ghi nhận trên giao diện. Cảm ơn bạn!");
         if (message) {
-          appendWishToWall(name, side, message, "Vừa xong", true);
+          dynamicUserWishes.unshift({
+            name,
+            side: sideLabel,
+            content: message,
+            time: dict.guestbook_just_now || "Vừa xong",
+            isNew: true
+          });
+          renderGuestbookWishes(currentLang);
         }
       } finally {
         if (submitBtn) submitBtn.disabled = false;
-        if (btnText) btnText.textContent = "Gửi Xác Nhận & Lời Chúc";
+        if (btnText) btnText.innerHTML = dict.rsvp_submit || "Gửi Xác Nhận &amp; Lời Chúc";
         if (btnSpinner) btnSpinner.classList.add("hidden");
       }
     });
@@ -975,45 +1055,64 @@
         }
       });
     }
+  }
 
-    function appendWishToWall(name, side, content, timeStr, isNew = false) {
-      if (!guestbookContainer) return;
+  function renderGuestbookWishes(lang) {
+    const guestbookContainer = document.getElementById("guestbook-wishes");
+    if (!guestbookContainer) return;
 
-      const card = document.createElement("div");
-      card.className = `p-4 md:p-5 rounded-2xl glass-panel border border-[#C5A059]/30 transition-all duration-500 ${
-        isNew ? "ring-2 ring-[#721121] scale-102 bg-white" : ""
-      }`;
+    guestbookContainer.innerHTML = "";
 
-      // Badge màu tùy theo nhà Trai hay nhà Gái
-      const isGroom = side.toLowerCase().includes("trai");
-      const badgeClass = isGroom 
-        ? "bg-[#721121]/10 text-[#721121] border-[#721121]/30" 
-        : "bg-[#C5A059]/15 text-[#800020] border-[#C5A059]/40";
+    // 1. Render lời chúc người dùng vừa gửi trong phiên trước
+    dynamicUserWishes.forEach((wish) => {
+      appendWishElement(guestbookContainer, wish.name, wish.side, wish.content, wish.time, wish.isNew);
+    });
 
-      card.innerHTML = `
-        <div class="flex items-center justify-between mb-2">
-          <div class="flex items-center gap-2">
-            <span class="font-serif-luxury font-bold text-lg text-[#2B090E]">${escapeHtml(name)}</span>
-            <span class="text-xs px-2.5 py-0.5 rounded-full border ${badgeClass} font-medium">${escapeHtml(side)}</span>
-          </div>
-          <span class="text-xs text-[#5A4744]/75">${escapeHtml(timeStr)}</span>
+    // 2. Render các lời chúc mẫu từ config
+    if (WEDDING_CONFIG.rsvp.initialWishes) {
+      WEDDING_CONFIG.rsvp.initialWishes.forEach((wish) => {
+        const side = (lang !== "vi" && wish["side_" + lang]) ? wish["side_" + lang] : wish.side;
+        const time = (lang !== "vi" && wish["time_" + lang]) ? wish["time_" + lang] : wish.time;
+        const content = (lang !== "vi" && wish["content_" + lang]) ? wish["content_" + lang] : wish.content;
+        appendWishElement(guestbookContainer, wish.name, side, content, time, false);
+      });
+    }
+  }
+
+  function appendWishElement(container, name, side, content, timeStr, isNew = false) {
+    const card = document.createElement("div");
+    card.className = `p-4 md:p-5 rounded-2xl glass-panel border border-[#C5A059]/30 transition-all duration-500 ${
+      isNew ? "ring-2 ring-[#721121] scale-102 bg-white" : ""
+    }`;
+
+    const isGroom = side.toLowerCase().includes("trai") || 
+                    side.toLowerCase().includes("marié") || 
+                    side.toLowerCase().includes("groom") || 
+                    side.includes("신랑") || 
+                    side.toLowerCase().includes("novio");
+    const badgeClass = isGroom 
+      ? "bg-[#721121]/10 text-[#721121] border-[#721121]/30" 
+      : "bg-[#C5A059]/15 text-[#800020] border-[#C5A059]/40";
+
+    card.innerHTML = `
+      <div class="flex items-center justify-between mb-2">
+        <div class="flex items-center gap-2">
+          <span class="font-serifLuxury font-bold text-lg text-[#2B090E]">${escapeHtml(name)}</span>
+          <span class="text-xs px-2.5 py-0.5 rounded-full border ${badgeClass} font-medium">${escapeHtml(side)}</span>
         </div>
-        <p class="text-sm text-[#2B090E] leading-relaxed italic">“${escapeHtml(content)}”</p>
-      `;
+        <span class="text-xs text-[#5A4744]/75">${escapeHtml(timeStr)}</span>
+      </div>
+      <p class="text-sm text-[#2B090E] leading-relaxed italic">“${escapeHtml(content)}”</p>
+    `;
 
-      if (isNew && guestbookContainer.firstChild) {
-        guestbookContainer.insertBefore(card, guestbookContainer.firstChild);
-      } else {
-        guestbookContainer.appendChild(card);
-      }
-    }
+    container.appendChild(card);
+  }
 
-    function escapeHtml(text) {
-      if (!text) return "";
-      const div = document.createElement("div");
-      div.textContent = text;
-      return div.innerHTML;
-    }
+  function escapeHtml(text) {
+    if (!text) return "";
+    const div = document.createElement("div");
+    div.textContent = text;
+    return div.innerHTML;
   }
 
 })();
