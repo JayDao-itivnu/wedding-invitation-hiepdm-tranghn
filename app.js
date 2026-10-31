@@ -17,6 +17,7 @@
   let activeLightboxIndex = 0;
   let currentTrackIndex = 0;
   let audioInitialized = false;
+  let currentLang = "vi";
 
   // --- 1. INITIALIZATION ON DOM READY ---
   document.addEventListener("DOMContentLoaded", () => {
@@ -28,6 +29,7 @@
 
     initPersonalizedGreeting();
     initAudio();
+    initI18n();
     initEnvelope();
     initLenisAndGSAP();
     initCountdown();
@@ -60,6 +62,66 @@
     }
     if (rsvpNameInput && guestParam) {
       rsvpNameInput.value = formattedName;
+    }
+  }
+
+  // --- 2.5. NGÔN NGỮ (I18N) ---
+  function initI18n() {
+    const cfg = WEDDING_CONFIG.i18n || {};
+    const savedLang = localStorage.getItem("wedding-lang") || cfg.defaultLang || "vi";
+    currentLang = savedLang;
+
+    // Áp dụng ngôn ngữ đã lưu
+    translate(currentLang);
+
+    // Sự kiện click nút cờ
+    document.querySelectorAll(".lang-btn").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        const lang = btn.getAttribute("data-lang");
+        if (!lang) return;
+
+        // Cập nhật UI nút cờ
+        document.querySelectorAll(".lang-btn").forEach((b) => {
+          if (b.getAttribute("data-lang") === lang) {
+            b.classList.add("lang-active");
+            b.classList.remove("bg-transparent", "text-wedding-goldLight/70");
+            b.classList.add("bg-wedding-gold/10", "text-wedding-goldLight");
+          } else {
+            b.classList.remove("lang-active");
+            b.classList.remove("bg-wedding-gold/10", "text-wedding-goldLight");
+            b.classList.add("bg-transparent", "text-wedding-goldLight/70");
+          }
+        });
+
+        currentLang = lang;
+        localStorage.setItem("wedding-lang", lang);
+        translate(lang);
+      });
+    });
+  }
+
+  // Dịch toàn bộ trang theo mã ngôn ngữ
+  function translate(lang) {
+    const langs = WEDDING_CONFIG.i18n.languages || {};
+    const dict = langs[lang] || langs.vi || {};
+
+    // Dịch các phần tử có data-i18n
+    document.querySelectorAll("[data-i18n]").forEach((el) => {
+      const key = el.getAttribute("data-i18n");
+      if (dict[key]) {
+        el.innerHTML = dict[key];
+      }
+    });
+
+    // Cập nhật thẻ <title> và meta description
+    if (dict.seo_title) document.title = dict.seo_title;
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc && dict.seo_description) metaDesc.setAttribute("content", dict.seo_description);
+
+    // Cập nhật các phần âm thanh (nút play/pause text)
+    const audioLabel = document.getElementById("audio-label");
+    if (audioLabel) {
+      audioLabel.textContent = isAudioPlaying ? dict.audio_btn_mute_on : dict.audio_btn_mute_off;
     }
   }
 
@@ -227,22 +289,23 @@
 
     const btnPlayPause = document.getElementById("audio-play-pause");
     const playImg = document.getElementById("audio-play-pause-img");
+    const dict = (WEDDING_CONFIG.i18n.languages || {})[currentLang] || {};
 
     if (isAudioPlaying) {
       bgMusicAudio.pause();
       isAudioPlaying = false;
       const lbl = document.getElementById("audio-label");
-      if (lbl) lbl.textContent = "Bật nhạc";
+      if (lbl) lbl.textContent = dict.audio_btn_mute_off || "Bật nhạc";
       if (playImg) playImg.src = "icons/play.png";
     } else {
       bgMusicAudio.play().then(() => {
         isAudioPlaying = true;
         const lbl = document.getElementById("audio-label");
-        if (lbl) lbl.textContent = "Tạm dừng";
+        if (lbl) lbl.textContent = dict.audio_btn_mute_on || "Tạm dừng";
         if (playImg) playImg.src = "icons/pause.png";
       }).catch((err) => {
         console.warn("Autoplay bị chặn bởi trình duyệt:", err);
-        alert("Trình duyệt chặn phát tự động. Vui lòng bấm nút 'Bật nhạc' để kích hoạt.");
+        alert(dict.audio_alert || "Trình duyệt chặn phát tự động. Vui lòng bấm nút 'Bật nhạc' để kích hoạt.");
       });
     }
   }
