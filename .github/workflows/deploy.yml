@@ -15,23 +15,32 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  deploy:
+  build-and-deploy:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout Source Code
         uses: actions/checkout@v4
 
-      - name: Setup Pages
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Build Dual-Side Invitation (Nhà Trai & Nhà Gái)
+        run: node build.js
+        env:
+          DEPLOY_SECRET: ${{ secrets.DEPLOY_SECRET || 'wedding-hiep-trang-2026' }}
+
+      - name: Setup GitHub Pages
         uses: actions/configure-pages@v5
 
-      - name: Upload artifact
+      - name: Upload Artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Đặt đường dẫn chứa các file tĩnh (nếu repo ở root hoặc trong thư mục)
-          path: '.'
+          path: './dist'
 
       - name: Deploy to GitHub Pages
         id: deployment

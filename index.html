@@ -389,7 +389,7 @@
 
   <!-- ==============================================================================
        5. SHORT VIDEO PRE-WEDDING (GSAP BURGUNDY BACKGROUND MORPH & SCALE-UP)
-       ============================================================================== -->
+       ============================================================================== 
   <section id="video-section" class="py-24 px-4 transition-colors duration-700">
     <div class="max-w-4xl mx-auto text-center">
       
@@ -398,9 +398,9 @@
         <p data-i18n="video_subtitle" class="text-xs sm:text-sm opacity-90 mt-2 font-sansApple">
           Từng ánh mắt, từng nụ cười được ghi lại trọn vẹn trong thước phim kỷ niệm
         </p>
-      </div>
+      </div>-->
 
-      <!-- Video Container Frame với hiệu ứng scale on scroll -->
+      <!-- Video Container Frame với hiệu ứng scale on scroll 
       <div class="video-container-frame aspect-video w-full max-w-3xl mx-auto bg-black relative">
         <iframe 
           id="wedding-video-iframe"
@@ -417,7 +417,7 @@
       </p>
 
     </div>
-  </section>
+  </section>-->
 
   <!-- ==============================================================================
        6. THƯ VIỆN ẢNH (BENTO GRID & LIGHTBOX)
@@ -618,9 +618,9 @@
             Trung Tâm Tiệc Cưới
           </span>
           <h3 data-i18n="venue_name" class="font-serifLuxury text-2xl sm:text-3xl font-bold text-wedding-burgundy mb-2">
-            Trống Đồng Palace Cầu Giấy
+            Nguyên Đình Long Biên
           </h3>
-          <p data-i18n="venue_hall" class="text-sm font-semibold text-wedding-gold mb-4">Sảnh Crystal (Tầng 2)</p>
+          <p data-i18n="venue_hall" class="text-sm font-semibold text-wedding-gold mb-4">Tầng 3</p>
           
           <div class="space-y-3 text-xs sm:text-sm text-wedding-charcoal">
             <div class="flex items-start gap-2.5">
@@ -628,14 +628,14 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
               </svg>
-              <span><strong data-i18n="venue_label_address">Địa chỉ:</strong> <span data-i18n="venue_address">Số 72 Trần Đăng Ninh, Phường Dịch Vọng, Quận Cầu Giấy, Hà Nội</span></span>
+              <span><strong data-i18n="venue_label_address">Địa chỉ:</strong> <span data-i18n="venue_address">TASCO Mall, 7-9 Nguyễn Văn Linh, Việt Hưng, Hà Nội</span></span>
             </div>
 
             <div class="flex items-start gap-2.5">
               <svg class="w-5 h-5 text-wedding-burgundy shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
               </svg>
-              <span><strong data-i18n="venue_label_time">Thời gian:</strong> <span data-i18n="venue_time">10:00 - Thứ Bảy, 26/12/2026</span></span>
+              <span><strong data-i18n="venue_label_time">Thời gian:</strong> <span data-i18n="venue_time">18:00 - Thứ Bảy, 26/12/2026</span></span>
             </div>
 
             <div class="flex items-start gap-2.5">
@@ -649,7 +649,8 @@
           <!-- Nút Chỉ đường Google Maps -->
           <div class="mt-6">
             <a 
-              href="https://maps.app.goo.gl/2Jkdq6iVro3x8sPJ6" 
+              id="venue-map-link"
+              href="https://maps.app.goo.gl/qddA5f4H8z5AV6HTA" 
               target="_blank" 
               rel="noopener noreferrer"
               class="inline-flex items-center gap-2 px-6 py-3 rounded-full burgundy-gradient-btn text-xs sm:text-sm font-semibold tracking-wider border border-wedding-gold/40 shadow-md"
@@ -665,12 +666,13 @@
         <!-- Google Maps Iframe -->
         <div id="map-wrapper" class="map-interactive-wrapper h-[280px] sm:h-[340px] border border-wedding-gold/30 shadow-inner">
           <iframe 
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3723.8638558814324!2d105.7909383758717!3d21.03813298061358!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab37482f3c73%3A0xe541743916212e3e!2zVHLhu5FuZyDEkOG7k25nIFBhbGFjZSBD4bqndSBHaeG6pXk!5e0!3m2!1svi!2s!4v1709280000000!5m2!1svi!2s" 
+            id="venue-map-iframe"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6404.692059804373!2d105.89079012693533!3d21.050862937015783!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135a9acc56038bf%3A0xfe2bcf18b37652b4!2zTmd1ecOqbiDEkMOsbmggTG9uZyBCacOqbg!5e1!3m2!1sen!2s!4v1793830376819!5m2!1sen!2s" 
             class="w-full h-full border-0" 
             allowfullscreen="" 
             loading="lazy" 
             referrerpolicy="no-referrer-when-downgrade"
-            title="Bản đồ Trống Đồng Palace Cầu Giấy"
+            title="Bản đồ chỉ đường tiệc cưới"
             data-i18n-title="venue_map_iframe_title"
           ></iframe>
           
@@ -777,7 +779,7 @@
               <label data-i18n="rsvp_side_label" class="block text-xs uppercase tracking-wider font-semibold text-wedding-burgundy mb-2">
                 Bạn là khách của:
               </label>
-              <div class="flex items-center gap-4 py-2">
+              <div class="flex flex-wrap items-center gap-4 py-2">
                 <label class="flex items-center gap-2 cursor-pointer text-sm">
                   <input type="radio" name="side" value="Nhà Trai" checked class="accent-wedding-burgundy w-4 h-4" />
                   <span data-i18n="rsvp_side_groom">Nhà Trai (Hiệp)</span>
@@ -785,6 +787,10 @@
                 <label class="flex items-center gap-2 cursor-pointer text-sm">
                   <input type="radio" name="side" value="Nhà Gái" class="accent-wedding-burgundy w-4 h-4" />
                   <span data-i18n="rsvp_side_bride">Nhà Gái (Trang)</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer text-sm">
+                  <input type="radio" name="side" value="Bạn Thân" class="accent-wedding-burgundy w-4 h-4" />
+                  <span data-i18n="rsvp_side_friend">Bạn Thân</span>
                 </label>
               </div>
             </div>

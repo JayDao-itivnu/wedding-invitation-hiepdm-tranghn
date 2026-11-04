@@ -3,7 +3,8 @@
  * WEDDING INVITATION APPLICATION SCRIPT
  * Style: Apple Scrollytelling, Lenis Smooth Scroll, GSAP, Canvas Confetti
  * Tone: Warm Beige & Burgundy
- * Internationalization: Multilingual (Tiếng Việt 🇻🇳 & Français 🇫🇷)
+ * Internationalization: Multilingual 5 Languages
+ * (Tiếng Việt 🇻🇳, Français 🇫🇷, English 🇬🇧, 한국어 🇰🇷, Español 🇪🇸)
  * ==============================================================================
  */
 
@@ -21,6 +22,7 @@
   let currentLang = "vi";
   let currentGuestName = "";
   const dynamicUserWishes = []; // Lưu các lời chúc người dùng vừa gửi trong phiên
+  let serverWishes = []; // Lưu lời chúc tải từ Google Apps Script
 
   // --- 1. INITIALIZATION ON DOM READY ---
   document.addEventListener("DOMContentLoaded", () => {
@@ -30,9 +32,10 @@
     }
     window.scrollTo(0, 0);
 
+    // Khởi tạo i18n trước để xác định ngôn ngữ đúng ngay từ đầu
+    initI18n();
     initPersonalizedGreeting();
     initAudio();
-    initI18n();
     initEnvelope();
     initLenisAndGSAP();
     initCountdown();
@@ -138,7 +141,7 @@
 
     // 1. Dịch innerHTML cho các phần tử có [data-i18n]
     document.querySelectorAll("[data-i18n]").forEach((el) => {
-      const key = el.getAttribute("data-i18n");
+      const key = (el.getAttribute("data-i18n") || "").trim();
       if (dict[key] !== undefined) {
         el.innerHTML = dict[key];
       }
@@ -146,7 +149,7 @@
 
     // 2. Dịch placeholder cho các trường input & textarea có [data-i18n-placeholder]
     document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
-      const key = el.getAttribute("data-i18n-placeholder");
+      const key = (el.getAttribute("data-i18n-placeholder") || "").trim();
       if (dict[key] !== undefined) {
         el.setAttribute("placeholder", dict[key]);
       }
@@ -154,7 +157,7 @@
 
     // 3. Dịch title cho các phần tử có [data-i18n-title]
     document.querySelectorAll("[data-i18n-title]").forEach((el) => {
-      const key = el.getAttribute("data-i18n-title");
+      const key = (el.getAttribute("data-i18n-title") || "").trim();
       if (dict[key] !== undefined) {
         el.setAttribute("title", dict[key]);
       }
@@ -162,7 +165,7 @@
 
     // 4. Dịch aria-label cho các phần tử có [data-i18n-aria-label]
     document.querySelectorAll("[data-i18n-aria-label]").forEach((el) => {
-      const key = el.getAttribute("data-i18n-aria-label");
+      const key = (el.getAttribute("data-i18n-aria-label") || "").trim();
       if (dict[key] !== undefined) {
         el.setAttribute("aria-label", dict[key]);
       }
@@ -170,7 +173,7 @@
 
     // 5. Dịch alt text cho hình ảnh có [data-i18n-alt]
     document.querySelectorAll("[data-i18n-alt]").forEach((el) => {
-      const key = el.getAttribute("data-i18n-alt");
+      const key = (el.getAttribute("data-i18n-alt") || "").trim();
       if (dict[key] !== undefined) {
         el.setAttribute("alt", dict[key]);
       }
@@ -204,6 +207,11 @@
     const btnText = document.getElementById("rsvp-btn-text");
     if (btnText && (!submitBtn || !submitBtn.disabled)) {
       btnText.innerHTML = dict.rsvp_submit || "Gửi Xác Nhận &amp; Lời Chúc";
+    }
+
+    // Đồng bộ lại tính toán scrolltrigger khi font/text thay đổi kích thước
+    if (typeof ScrollTrigger !== "undefined") {
+      ScrollTrigger.refresh();
     }
   }
 
@@ -398,6 +406,25 @@
 
     if (!envelopeScreen || !envelopeWrapper) return;
 
+    // Helper an toàn bọc lệnh gọi GSAP to/fromTo tránh cảnh báo target not found trên Console
+    const safeTo = (tl, target, vars, position) => {
+      const el = typeof target === "string" ? document.querySelector(target) : target;
+      if (el) {
+        if (position !== undefined) tl.to(el, vars, position);
+        else tl.to(el, vars);
+      }
+      return tl;
+    };
+
+    const safeFromTo = (tl, target, fromVars, toVars, position) => {
+      const el = typeof target === "string" ? document.querySelector(target) : target;
+      if (el) {
+        if (position !== undefined) tl.fromTo(el, fromVars, toVars, position);
+        else tl.fromTo(el, fromVars, toVars);
+      }
+      return tl;
+    };
+
     const triggerOpen = () => {
       if (isEnvelopeOpened) return;
       isEnvelopeOpened = true;
@@ -438,11 +465,19 @@
               audioBar.classList.add("shown");
             }
 
-            gsap.to(bgMusicAudio, { volume: 0.75, duration: 1.5, ease: "power1.out" });
+            if (typeof gsap !== "undefined") {
+              gsap.to(bgMusicAudio, { volume: 0.75, duration: 1.5, ease: "power1.out" });
+            }
           }).catch((err) => console.log("Audio unlock:", err));
         } catch (err) {
           console.warn("Audio play issue:", err);
         }
+      }
+
+      if (typeof gsap === "undefined") {
+        envelopeScreen.style.display = "none";
+        document.body.classList.remove("envelope-locked");
+        return;
       }
 
       const masterTl = gsap.timeline({
@@ -464,12 +499,13 @@
         }
       });
 
-      masterTl.to(waxSeal, {
+      safeTo(masterTl, waxSeal, {
         scale: 0.88,
         duration: 0.16,
         ease: "power2.in"
-      })
-      .to(waxSeal, {
+      });
+
+      safeTo(masterTl, waxSeal, {
         scale: 1.35,
         opacity: 0,
         filter: "brightness(1.8) drop-shadow(0 0 20px #DFCA95)",
@@ -478,30 +514,34 @@
         onStart: () => {
           fireEpicSealBurst(originX, originY);
         }
-      })
-      .to(flap, {
+      });
+
+      safeTo(masterTl, flap, {
         rotateX: 180,
         duration: 0.75,
         ease: "power3.inOut"
-      }, "-=0.25")
-      .to(envelopeWrapper, {
+      }, "-=0.25");
+
+      safeTo(masterTl, envelopeWrapper, {
         scale: 1.15,
         y: -18,
         opacity: 0,
         filter: "blur(6px)",
         duration: 0.7,
         ease: "power2.inOut"
-      }, "-=0.45")
-      .to(envelopeScreen, {
+      }, "-=0.45");
+
+      safeTo(masterTl, envelopeScreen, {
         opacity: 0,
         duration: 0.65,
         ease: "power2.inOut"
-      }, "-=0.45")
-      .fromTo(".hero-badge", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, "-=0.35")
-      .fromTo(".hero-title-main", { opacity: 0, y: 40, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.95, ease: "power3.out" }, "-=0.6")
-      .fromTo(".hero-monogram-circle", { opacity: 0, scale: 0.6, rotation: -20 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.85, ease: "back.out(2)" }, "-=0.65")
-      .fromTo(".hero-date-box", { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, "-=0.55")
-      .fromTo(".hero-scroll-hint", { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, "-=0.4");
+      }, "-=0.45");
+
+      safeFromTo(masterTl, ".hero-badge", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, "-=0.35");
+      safeFromTo(masterTl, ".hero-title-main", { opacity: 0, y: 40, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.95, ease: "power3.out" }, "-=0.6");
+      safeFromTo(masterTl, ".hero-monogram-circle", { opacity: 0, scale: 0.6, rotation: -20 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.85, ease: "back.out(2)" }, "-=0.65");
+      safeFromTo(masterTl, ".hero-date-box", { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, "-=0.55");
+      safeFromTo(masterTl, ".hero-scroll-hint", { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, "-=0.4");
     };
 
     if (waxSeal) waxSeal.addEventListener("click", triggerOpen);
@@ -566,12 +606,16 @@
       });
       window.weddingLenis = lenisInstance;
 
-      lenisInstance.on("scroll", ScrollTrigger.update);
+      if (typeof ScrollTrigger !== "undefined") {
+        lenisInstance.on("scroll", ScrollTrigger.update);
+      }
 
-      gsap.ticker.add((time) => {
-        lenisInstance.raf(time * 1000);
-      });
-      gsap.ticker.lagSmoothing(0);
+      if (typeof gsap !== "undefined") {
+        gsap.ticker.add((time) => {
+          lenisInstance.raf(time * 1000);
+        });
+        gsap.ticker.lagSmoothing(0);
+      }
     }
 
     if (typeof gsap !== "undefined" && typeof ScrollTrigger !== "undefined") {
@@ -583,7 +627,7 @@
   // --- 7. GSAP SCROLLYTELLING ANIMATIONS ---
   function initScrollytellingAnimations() {
     const heroImg = document.querySelector(".hero-bg-image");
-    if (heroImg) {
+    if (heroImg && document.querySelector("#hero-section")) {
       gsap.to(heroImg, {
         yPercent: 20,
         ease: "none",
@@ -723,8 +767,16 @@
     const eventDetails = encodeURIComponent(`Trân trọng kính mời quý khách tới chung vui cùng gia đình chúng mình tại ${WEDDING_CONFIG.event.venue.name}.\nĐịa chỉ: ${WEDDING_CONFIG.event.venue.address}`);
     const eventLocation = encodeURIComponent(`${WEDDING_CONFIG.event.venue.name}, ${WEDDING_CONFIG.event.venue.address}`);
     
-    const startTimeUtc = "20261226T030000Z";
-    const endTimeUtc = "20261226T070000Z";
+    // Convert solarDate to UTC string for Google Calendar
+    let startTimeUtc = "20261226T030000Z";
+    let endTimeUtc = "20261226T070000Z";
+    try {
+      const sDate = new Date(WEDDING_CONFIG.event.solarDate);
+      const eDate = new Date(sDate.getTime() + 4 * 60 * 60 * 1000); // +4 tiếng
+      const toUtcString = (d) => d.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+      startTimeUtc = toUtcString(sDate);
+      endTimeUtc = toUtcString(eDate);
+    } catch (_) {}
 
     if (btnGoogleCal) {
       btnGoogleCal.addEventListener("click", () => {
@@ -751,7 +803,7 @@
           "BEGIN:VALARM",
           "TRIGGER:-PT2H",
           "ACTION:DISPLAY",
-          "DESCRIPTION:Nhắc nhở: Lễ cưới Mạnh Hiệp & Huyền Trang sắp diễn ra!",
+          `DESCRIPTION:Nhắc nhở: Lễ cưới ${WEDDING_CONFIG.couple.groom.name} & ${WEDDING_CONFIG.couple.bride.name} sắp diễn ra!`,
           "END:VALARM",
           "END:VEVENT",
           "END:VCALENDAR"
@@ -914,8 +966,22 @@
     });
   }
 
-  // --- 12. MAP TOUCH SHIELD ---
+  // --- 12. MAP TOUCH SHIELD & VENUE MAP BINDING ---
   function initMapShield() {
+    // Đồng bộ đường dẫn bản đồ và iframe từ WEDDING_CONFIG.event.venue
+    const venue = WEDDING_CONFIG.event?.venue;
+    const mapLink = document.getElementById("venue-map-link");
+    const mapIframe = document.getElementById("venue-map-iframe");
+
+    if (venue) {
+      if (mapLink && venue.mapsNavigationUrl) {
+        mapLink.href = venue.mapsNavigationUrl;
+      }
+      if (mapIframe && venue.mapsEmbedIframeUrl) {
+        mapIframe.src = venue.mapsEmbedIframeUrl;
+      }
+    }
+
     const shield = document.getElementById("map-touch-shield");
     const mapWrapper = document.getElementById("map-wrapper");
 
@@ -939,10 +1005,24 @@
     const rsvpModal = document.getElementById("rsvp-success-modal");
     const modalClose = document.getElementById("modal-success-close");
 
+    // 1. Tự động chọn giá trị mặc định cho trường nhóm khách (side) theo trang đang mở:
+    // "Nhà Trai" nếu đang ở link nhà trai, "Nhà Gái" nếu đang ở link nhà gái
+    const currentEventSide = WEDDING_CONFIG.event?.event_side || "nhatrai";
+    const targetSideValue = currentEventSide === "nhagai" ? "Nhà Gái" : "Nhà Trai";
+    const defaultSideRadio = document.querySelector(`input[name="side"][value="${targetSideValue}"]`);
+    if (defaultSideRadio) {
+      defaultSideRadio.checked = true;
+    }
+
+    // 2. Render lời chúc ban đầu
     renderGuestbookWishes(currentLang);
+
+    // 3. Tải lời chúc từ Google Apps Script (GET request)
+    fetchGuestbookFromGAS();
 
     if (!rsvpForm) return;
 
+    // 4. Xử lý gửi Form RSVP (POST request tới Google Apps Script)
     rsvpForm.addEventListener("submit", async (e) => {
       e.preventDefault();
 
@@ -951,7 +1031,8 @@
       const phone = document.getElementById("rsvp-phone").value.trim();
       const attendance = document.querySelector('input[name="attendance"]:checked')?.value || "yes";
       const guestsCount = document.getElementById("rsvp-guests")?.value || "1";
-      const side = document.querySelector('input[name="side"]:checked')?.value || "Nhà Trai";
+      const sideRadio = document.querySelector('input[name="side"]:checked');
+      const side = sideRadio ? sideRadio.value : "Nhà Trai";
       const message = document.getElementById("rsvp-message").value.trim();
 
       if (!name) {
@@ -963,45 +1044,45 @@
       if (btnText) btnText.textContent = dict.rsvp_submitting || "Đang gửi...";
       if (btnSpinner) btnSpinner.classList.remove("hidden");
 
-      const sideKey = side === "Nhà Trai" ? "rsvp_side_groom" : "rsvp_side_bride";
-      const sideLabel = dict[sideKey] || side;
       const attendanceText = attendance === "yes" 
-        ? (dict.rsvp_yes || "Có tham dự") 
-        : (dict.rsvp_no || "Rất tiếc không thể tham dự");
+        ? (dict.rsvp_yes || "Chắc chắn mình sẽ tham dự") 
+        : (dict.rsvp_no || "Rất tiếc mình bận không thể đến");
 
+      // Payload JSON khớp chính xác 100% với yêu cầu Google Apps Script
       const payload = {
-        name,
-        phone,
+        name: name,
+        phone: phone,
         attendance: attendanceText,
-        guestsCount,
-        side: sideLabel,
-        message,
-        timestamp: new Date().toISOString()
+        guestsCount: String(guestsCount),
+        side: side, // Giá trị badge: Nhà Trai | Nhà Gái | Bạn Thân
+        message: message,
+        event_side: WEDDING_CONFIG.event?.event_side || "nhatrai"
       };
 
-      const hasScriptUrl = Boolean(WEDDING_CONFIG.rsvp.googleScriptUrl && WEDDING_CONFIG.rsvp.googleScriptUrl.trim());
+      const hasScriptUrl = Boolean(WEDDING_CONFIG.rsvp?.googleScriptUrl && WEDDING_CONFIG.rsvp.googleScriptUrl.trim());
 
       try {
-        if (hasScriptUrl && !WEDDING_CONFIG.rsvp.mockMode) {
+        if (hasScriptUrl && !WEDDING_CONFIG.rsvp?.mockMode) {
           await fetch(WEDDING_CONFIG.rsvp.googleScriptUrl, {
             method: "POST",
             mode: "no-cors",
             headers: {
-              "Content-Type": "application/json"
+              "Content-Type": "text/plain;charset=utf-8"
             },
             body: JSON.stringify(payload)
           });
         } else {
           console.log("[RSVP Mock Mode Activated] Data captured:", payload);
-          await new Promise((resolve) => setTimeout(resolve, 650));
+          await new Promise((resolve) => setTimeout(resolve, 600));
         }
 
         fireWeddingConfetti();
 
+        // Ngay sau khi gửi POST thành công, nếu khách có nhập lời chúc, chèn ngay lên đầu danh sách
         if (message) {
           const newWishObj = {
-            name,
-            side: sideLabel,
+            name: name,
+            side: side,
             content: message,
             time: dict.guestbook_just_now || "Vừa xong",
             isNew: true
@@ -1024,14 +1105,19 @@
         const currentNameVal = document.getElementById("rsvp-name").value;
         rsvpForm.reset();
         document.getElementById("rsvp-name").value = currentNameVal;
+        // Giữ lại side mặc định sau khi reset form
+        const resetSideRadio = document.querySelector(`input[name="side"][value="${targetSideValue}"]`);
+        if (resetSideRadio) {
+          resetSideRadio.checked = true;
+        }
 
       } catch (err) {
         console.error("Lỗi gửi RSVP:", err);
         alert(dict.rsvp_alert_error || "Có lỗi nhỏ khi gửi phản hồi, nhưng lời chúc của bạn đã được ghi nhận trên giao diện. Cảm ơn bạn!");
         if (message) {
           dynamicUserWishes.unshift({
-            name,
-            side: sideLabel,
+            name: name,
+            side: side,
             content: message,
             time: dict.guestbook_just_now || "Vừa xong",
             isNew: true
@@ -1057,19 +1143,51 @@
     }
   }
 
+  // Tải danh sách lời chúc từ Google Apps Script (GET)
+  async function fetchGuestbookFromGAS() {
+    const scriptUrl = WEDDING_CONFIG.rsvp?.googleScriptUrl;
+    if (!scriptUrl || !scriptUrl.trim() || WEDDING_CONFIG.rsvp?.mockMode) {
+      return;
+    }
+    try {
+      const getUrl = scriptUrl + (scriptUrl.includes("?") ? "&" : "?") + "action=getWishes";
+      const res = await fetch(getUrl);
+      if (!res.ok) return;
+      const json = await res.json();
+      if (json && json.status === "success" && Array.isArray(json.data) && json.data.length > 0) {
+        serverWishes = json.data;
+        renderGuestbookWishes(currentLang);
+      }
+    } catch (err) {
+      console.warn("Không thể tải lời chúc từ Google Apps Script, sử dụng fallback mẫu:", err);
+    }
+  }
+
   function renderGuestbookWishes(lang) {
     const guestbookContainer = document.getElementById("guestbook-wishes");
     if (!guestbookContainer) return;
 
     guestbookContainer.innerHTML = "";
 
-    // 1. Render lời chúc người dùng vừa gửi trong phiên trước
+    // 1. Render lời chúc người dùng vừa gửi trực tiếp trong phiên
     dynamicUserWishes.forEach((wish) => {
       appendWishElement(guestbookContainer, wish.name, wish.side, wish.content, wish.time, wish.isNew);
     });
 
-    // 2. Render các lời chúc mẫu từ config
-    if (WEDDING_CONFIG.rsvp.initialWishes) {
+    // 2. Render danh sách lời chúc từ Google Apps Script nếu có
+    if (serverWishes && serverWishes.length > 0) {
+      serverWishes.forEach((item) => {
+        const wishName = item.name || "Khách Quý";
+        const wishBadge = item.badge || item.side || "Bạn Thân";
+        const wishMessage = item.message || item.content || "";
+        const wishTime = item.time || "";
+        appendWishElement(guestbookContainer, wishName, wishBadge, wishMessage, wishTime, false);
+      });
+      return;
+    }
+
+    // 3. Fallback: Render các lời chúc mẫu từ config
+    if (WEDDING_CONFIG.rsvp?.initialWishes) {
       WEDDING_CONFIG.rsvp.initialWishes.forEach((wish) => {
         const side = (lang !== "vi" && wish["side_" + lang]) ? wish["side_" + lang] : wish.side;
         const time = (lang !== "vi" && wish["time_" + lang]) ? wish["time_" + lang] : wish.time;
@@ -1085,14 +1203,24 @@
       isNew ? "ring-2 ring-[#721121] scale-102 bg-white" : ""
     }`;
 
-    const isGroom = side.toLowerCase().includes("trai") || 
-                    side.toLowerCase().includes("marié") || 
-                    side.toLowerCase().includes("groom") || 
+    const sideLower = (side || "").toLowerCase();
+    const isGroom = sideLower.includes("trai") || 
+                    sideLower.includes("marié") || 
+                    sideLower.includes("groom") || 
                     side.includes("신랑") || 
-                    side.toLowerCase().includes("novio");
-    const badgeClass = isGroom 
-      ? "bg-[#721121]/10 text-[#721121] border-[#721121]/30" 
-      : "bg-[#C5A059]/15 text-[#800020] border-[#C5A059]/40";
+                    sideLower.includes("novio");
+    const isFriend = sideLower.includes("bạn thân") ||
+                     sideLower.includes("ami") ||
+                     sideLower.includes("friend") ||
+                     side.includes("절친") ||
+                     sideLower.includes("amigo");
+
+    let badgeClass = "bg-[#C5A059]/15 text-[#800020] border-[#C5A059]/40"; // Nhà Gái
+    if (isGroom) {
+      badgeClass = "bg-[#721121]/10 text-[#721121] border-[#721121]/30";
+    } else if (isFriend) {
+      badgeClass = "bg-[#C5A059]/25 text-[#4A0E17] border-[#C5A059]/50 font-semibold";
+    }
 
     card.innerHTML = `
       <div class="flex items-center justify-between mb-2">

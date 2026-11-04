@@ -9,70 +9,31 @@
  */
 
 const WEDDING_CONFIG = {
-  // --- 1. THÔNG TIN CÔ DÂU & CHÚ RỂ ---
+  // --- 1. THÔNG TIN CÔ DÂU & CHÚ RỂ (DÙNG CHUNG) ---
   couple: {
     groom: {
       name: "Mạnh Hiệp",
       fullName: "Đào Mạnh Hiệp",
       role: "Chú rể",
       avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80",
-      parents: "Ông Đào Mạnh Hiển & Bà Nguyễn Thị Hà",
-      story: "Chàng kỹ sư công nghệ với trái tim ấm áp, luôn tin vào điều kỳ diệu của định mệnh và nụ cười rạng rỡ của người con gái ấy."
+      parents: "Ông Đào Mạnh Hiển & Bà Nguyễn Thị Hà"
     },
     bride: {
       name: "Huyền Trang",
       fullName: "Nguyễn Huyền Trang",
       role: "Cô dâu",
       avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80",
-      parents: "Ông Nguyễn Mạnh Hòa & Bà Nguyễn Thu Huyền",
-      story: "Cô gái yêu nghệ thuật, dịu dàng và tinh tế. Nơi nào có em, nơi đó ngập tràn ánh nắng và sự an yên trong tâm hồn."
+      parents: "Ông Nguyễn Mạnh Hòa & Bà Nguyễn Thu Huyền"
     },
     monogram: "H & T",
     logo: "logo-cuoi-H-T-tach-nen-2048px.svg",
     quote: "Tình yêu không chỉ là nhìn nhau, mà là cùng nhau nhìn về một hướng trên con đường phía trước."
   },
 
-  // --- 2. THỜI GIAN & ĐỊA ĐIỂM TỔ CHỨC ---
-  event: {
-    dateTimeStr: "26/12/2026 - 10:00",
-    solarDate: "2026-12-26T10:00:00+07:00",
+  // --- 2. THÔNG TIN SỰ KIỆN DÙNG CHUNG ---
+  event_shared: {
+    weddingDate: "2026-12-26",
     lunarDate: "Ngày 18 tháng 11 năm Bính Ngọ",
-    
-    venue: {
-      name: "Trống Đồng Palace Cầu Giấy",
-      hall: "Sảnh Crystal (Tầng 2)",
-      address: "Số 72 Trần Đăng Ninh, Phường Dịch Vọng, Quận Cầu Giấy, Hà Nội",
-      mapsNavigationUrl: "https://maps.app.goo.gl/2Jkdq6iVro3x8sPJ6",
-      mapsEmbedIframeUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3723.8638558814324!2d105.7909383758717!3d21.03813298061358!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab37482f3c73%3A0xe541743916212e3e!2zVHLhu5FuZyDEkOG7k25nIFBhbGFjZSBD4bqndSBHaeG6pXk!5e0!3m2!1svi!2s!4v1709280000000!5m2!1svi!2s"
-    },
-
-    timeline: [
-      {
-        time: "10:00",
-        title: "Đón Tiếp Khách Mời",
-        desc: "Chào đón những vị khách quý, check-in chụp ảnh lưu niệm tại photobooth sang trọng cùng Cô dâu & Chú rể.",
-        icon: "camera"
-      },
-      {
-        time: "10:30",
-        title: "Lễ Thành Hôn Trang Trọng",
-        desc: "Thời khắc thiêng liêng trao nhẫn cưới, cắt bánh, rót rượu mừng và trao nhau lời hẹn ước trăm năm.",
-        icon: "ring"
-      },
-      {
-        time: "11:00",
-        title: "Khai Tiệc Mừng Cưới",
-        desc: "Thưởng thức tiệc ẩm thực tinh hoa cùng lời chúc phúc từ gia đình, người thân và bạn bè.",
-        icon: "champagne"
-      },
-      {
-        time: "11:45",
-        title: "Giao Lưu & Âm Nhạc",
-        desc: "Cùng hòa mình vào giai điệu ngọt ngào, những trò chơi thú vị và bốc thăm may mắn.",
-        icon: "music"
-      }
-    ],
-
     dresscode: {
       description: "Để tạo nên những khung hình kỷ niệm hài hòa và ấm áp, gia đình rất mong quý khách lựa chọn trang phục theo bảng màu:",
       palette: [
@@ -83,6 +44,373 @@ const WEDDING_CONFIG = {
         { name: "Đen Sang Trọng", color: "#1C1917", border: "#A8A29E" }
       ],
       note: "Quý khách vui lòng tránh mặc trang phục màu trắng tinh khôi để tôn vinh bộ váy cưới của Cô dâu."
+    }
+  },
+
+  // --- 2a. SỰ KIỆN NHÀ TRAI (event_side: "nhatrai") ---
+  event_nhatrai: {
+    event_side: "nhatrai",
+    event_side_label: "Nhà Trai",
+    dateTimeStr: "26/12/2026 - 18:00",
+    solarDate: "2026-12-26T18:00:00+07:00",
+    lunarDate: "Ngày 18 tháng 11 năm Bính Ngọ",
+    venue: {
+      name: "Nguyên Đình Long Biên",
+      hall: "Tầng 3",
+      address: "TASCO Mall, 7-9, Nguyễn Văn Linh, Việt Hưng, Hà Nội",
+      mapsNavigationUrl: "https://maps.app.goo.gl/qddA5f4H8z5AV6HTA",
+      mapsEmbedIframeUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6404.692059804373!2d105.89079012693533!3d21.050862937015783!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135a9acc56038bf%3A0xfe2bcf18b37652b4!2zTmd1ecOqbiDEkMOsbmggTG9uZyBCacOqbg!5e1!3m2!1sen!2s!4v1793830376819!5m2!1sen!2s"
+    },
+    timeline: [
+      {
+        time: "18:00",
+        title: "Đón Tiếp Khách Mời",
+        desc: "Chào đón những vị khách quý, check-in chụp ảnh lưu niệm tại photobooth sang trọng cùng Cô dâu & Chú rể.",
+        icon: "camera"
+      },
+      {
+        time: "18:30",
+        title: "Lễ Thành Hôn Trang Trọng",
+        desc: "Thời khắc thiêng liêng trao nhẫn cưới, cắt bánh, rót rượu mừng và trao nhau lời hẹn ước trăm năm.",
+        icon: "ring"
+      },
+      {
+        time: "19:00",
+        title: "Khai Tiệc Mừng Cưới",
+        desc: "Thưởng thức tiệc ẩm thực tinh hoa cùng lời chúc phúc từ gia đình, người thân và bạn bè.",
+        icon: "champagne"
+      },
+      {
+        time: "20:00",
+        title: "Giao Lưu & Âm Nhạc",
+        desc: "Cùng hòa mình vào giai điệu ngọt ngào, những trò chơi thú vị và bốc thăm may mắn.",
+        icon: "music"
+      }
+    ],
+    i18n_overrides: {
+  lang_vi: {
+    venue_name: "Nguyên Đình Long Biên",
+    venue_hall: "Tầng 3",
+    venue_address: "TASCO Mall, 7-9 Nguyễn Văn Linh, Việt Hưng, Hà Nội",
+    venue_time: "18:00 - Thứ Bảy, 26/12/2026",
+    countdown_date_lunar: "Thứ Bảy, ngày 26 tháng 12 năm 2026 (Tức ngày 18 tháng 11 năm Bính Ngọ)",
+    footer_date: "26 . 12 . 2026 | Nguyên Đình Long Biên, Hà Nội",
+    timeline_event1_time: "18:00",
+    timeline_event1_title: "Đón Tiếp Khách Mời",
+    timeline_event1_desc: "Chào đón những vị khách quý, check-in chụp ảnh lưu niệm tại photobooth sang trọng cùng Cô dâu & Chú rể.",
+    timeline_event2_time: "18:30",
+    timeline_event2_title: "Lễ Thành Hôn Trang Trọng",
+    timeline_event2_desc: "Thời khắc thiêng liêng trao nhẫn cưới, cắt bánh, rót rượu mừng và trao nhau lời hẹn ước trăm năm.",
+    timeline_event3_time: "19:00",
+    timeline_event3_title: "Khai Tiệc Mừng Cưới",
+    timeline_event3_desc: "Thưởng thức tiệc ẩm thực tinh hoa cùng lời chúc phúc từ gia đình, người thân và bạn bè.",
+    timeline_event4_time: "20:00",
+    timeline_event4_title: "Giao Lưu & Âm Nhạc",
+    timeline_event4_desc: "Cùng hòa mình vào giai điệu ngọt ngào, những trò chơi thú vị và bốc thăm may mắn.",
+    seo_title: "Tiệc Thành Hôn (Nhà Trai): Mạnh Hiệp & Huyền Trang | 26.12.2026",
+    seo_description: "Trân trọng kính mời quý khách tới tham dự Tiệc thành hôn (Nhà Trai) của Mạnh Hiệp & Huyền Trang tại Nguyên Đình Long Biên vào lúc 18:00 ngày 26/12/2026."
+  },
+  lang_fr: {
+    venue_name: "Nguyên Đình Long Biên",
+    venue_hall: "3e étage",
+    venue_address: "TASCO Mall, 7-9 rue Nguyễn Văn Linh, quartier Việt Hưng, Hanoï",
+    venue_time: "18h00 - Samedi 26/12/2026",
+    countdown_date_lunar: "Samedi 26 décembre 2026 (18e jour du 11e mois lunaire, Année du Cheval de Feu)",
+    footer_date: "26 . 12 . 2026 | Nguyên Đình Long Biên, Hanoï",
+    timeline_event1_time: "18h00",
+    timeline_event1_title: "Accueil des Invités",
+    timeline_event1_desc: "Bienvenue aux invités, photos souvenirs au photobooth élégant avec les mariés.",
+    timeline_event2_time: "18h30",
+    timeline_event2_title: "Cérémonie de Mariage Solennelle",
+    timeline_event2_desc: "Échange des alliances, coupe du gâteau de mariage, toast au champagne et promesses d'éternité.",
+    timeline_event3_time: "19h00",
+    timeline_event3_title: "Banquet de Mariage",
+    timeline_event3_desc: "Dégustation d'une cuisine raffinée et chaleureuses félicitations des proches.",
+    timeline_event4_time: "20h00",
+    timeline_event4_title: "Échange & Musique",
+    timeline_event4_desc: "Mélodies romantiques, animations festives et tirage au sort avec de beaux souvenirs.",
+    seo_title: "Cérémonie de Mariage (Famille du Marié) : Mạnh Hiệp & Huyền Trang | 26.12.2026",
+    seo_description: "Nous avons le plaisir de vous inviter à la cérémonie de mariage (Famille du Marié) au Nguyên Đình Long Biên, à 18h00 le samedi 26 décembre 2026."
+  },
+  lang_en: {
+    venue_name: "Nguyên Đình Long Biên",
+    venue_hall: "3rd Floor",
+    venue_address: "TASCO Mall, No. 7-9 Nguyễn Văn Linh, Việt Hưng Ward, Hanoi",
+    venue_time: "6:00 PM - Saturday, December 26, 2026",
+    countdown_date_lunar: "Saturday, December 26, 2026 (18th day of the 11th Lunar Month, Year of the Fire Horse)",
+    footer_date: "26 . 12 . 2026 | Nguyên Đình Long Biên, Hanoi",
+    timeline_event1_time: "6:00 PM",
+    timeline_event1_title: "Guest Welcome & Reception",
+    timeline_event1_desc: "Welcome guests, check-in and take keepsake photos at the photobooth with the Bride & Groom.",
+    timeline_event2_time: "6:30 PM",
+    timeline_event2_title: "Formal Wedding Ceremony",
+    timeline_event2_desc: "The sacred moment of exchanging wedding rings, cutting the cake, champagne toast and vows.",
+    timeline_event3_time: "7:00 PM",
+    timeline_event3_title: "Wedding Banquet",
+    timeline_event3_desc: "Enjoy exquisite fine dining accompanied by heartfelt blessings from family and friends.",
+    timeline_event4_time: "8:00 PM",
+    timeline_event4_title: "Music & Social Gathering",
+    timeline_event4_desc: "Sweet melodies, fun interactive games, and lucky draw moments.",
+    seo_title: "Wedding Ceremony (Groom's Family): Mạnh Hiệp & Huyền Trang | Dec 26, 2026",
+    seo_description: "Cordially invite you to the wedding celebration (Groom's Family) of Mạnh Hiệp & Huyền Trang at Nguyên Đình Long Biên, 6:00 PM, Saturday, December 26, 2026."
+  },
+  lang_ko: {
+    venue_name: "Nguyên Đình Long Biên (응우옌딘 롱비엔)",
+    venue_hall: "3층 (Tầng 3)",
+    venue_address: "하노이 비엣흥동 응우옌반린 7-9, TASCO 몰 (TASCO Mall, 7-9 Nguyễn Văn Linh, Việt Hưng, Hanoi)",
+    venue_time: "2026년 12월 26일 토요일 오후 6:00",
+    countdown_date_lunar: "2026년 12월 26일 토요일 (병오년 음력 11월 18일)",
+    footer_date: "2026 . 12 . 26 | Nguyên Đình Long Biên, 하노이",
+    timeline_event1_time: "18:00",
+    timeline_event1_title: "하객 맞이 & 포토타임",
+    timeline_event1_desc: "귀빈 맞이, 포토부스 기념사진 촬영 및 신랑·신부와의 만남.",
+    timeline_event2_time: "18:30",
+    timeline_event2_title: "본식 (결혼 예식)",
+    timeline_event2_desc: "예물 교환, 웨딩 케이크 커팅, 샴페인 토스트 및 백년가약 서약.",
+    timeline_event3_time: "19:00",
+    timeline_event3_title: "피로연 & 식사",
+    timeline_event3_desc: "정성껏 준비한 음식과 함께 축배를 들며 축하를 나눕니다.",
+    timeline_event4_time: "20:00",
+    timeline_event4_title: "축하 음악 & 교제",
+    timeline_event4_desc: "달콤한 음악과 즐거운 이벤트 및 럭키드로우로 소중한 추억을 만듭니다.",
+    seo_title: "결혼식 (신랑 측): Mạnh Hiệp & Huyền Trang | 2026.12.26",
+    seo_description: "2026년 12월 26일 토요일 오후 6시 Nguyên Đình Long Biên에서 열리는 Mạnh Hiệp & Huyền Trang의 결혼식(신랑 측)에 정중히 초대합니다."
+  },
+  lang_es: {
+    venue_name: "Nguyên Đình Long Biên",
+    venue_hall: "3er Piso",
+    venue_address: "TASCO Mall, Nº 7-9 Nguyễn Văn Linh, Việt Hưng, Hanói",
+    venue_time: "18:00 - Sábado, 26/12/2026",
+    countdown_date_lunar: "Sábado, 26 de diciembre de 2026 (Día 18 del 11º mes lunar, Año del Caballo de Fuego)",
+    footer_date: "26 . 12 . 2026 | Nguyên Đình Long Biên, Hanói",
+    timeline_event1_time: "18:00",
+    timeline_event1_title: "Recepción de Invitados",
+    timeline_event1_desc: "Bienvenida a los invitados, fotos de recuerdo en el photobooth con los Novios.",
+    timeline_event2_time: "18:30",
+    timeline_event2_title: "Ceremonia Nupcial Solemne",
+    timeline_event2_desc: "Momento sagrado del intercambio de alianzas, corte de pastel, brindis con champán y votos de amor.",
+    timeline_event3_time: "19:00",
+    timeline_event3_title: "Banquete de Bodas",
+    timeline_event3_desc: "Degustación de alta gastronomía junto con felicitaciones de familiares và amigos.",
+    timeline_event4_time: "20:00",
+    timeline_event4_title: "Música & Celebración",
+    timeline_event4_desc: "Melodías dulces, juegos interactivos entretenidos y sorteo especial con recuerdos únicos.",
+    seo_title: "Ceremonia de Boda (Familia del Novio): Mạnh Hiệp & Huyền Trang | 26.12.2026",
+    seo_description: "Te invitamos cordialmente a la ceremonia de boda (Familia del Novio) en Nguyên Đình Long Biên a las 18:00 el sábado 26 de diciembre de 2026."
+  }
+}
+  },
+
+  // --- 2b. SỰ KIỆN NHÀ GÁI (event_side: "nhagai") ---
+  event_nhagai: {
+    event_side: "nhagai",
+    event_side_label: "Nhà Gái",
+    dateTimeStr: "26/12/2026 - 10:30",
+    solarDate: "2026-12-26T10:30:00+07:00",
+    lunarDate: "Ngày 18 tháng 11 năm Bính Ngọ",
+    venue: {
+      name: "Trống Đồng Palace",
+      hall: "Golden Hall",
+      address: "72 Trần Đăng Ninh, Phường Nghĩa Đô, Hà Nội",
+      mapsNavigationUrl: "https://maps.app.goo.gl/MY9ZkZXDoRtLgj2JA",
+      mapsEmbedIframeUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d204967.79788947137!2d105.66236986637267!3d21.0380377!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab3825b81c07%3A0x95ef3aeb3d5bf0f!2zVHLhu5FuZyDEkOG7k25nIFBhbGFjZQ!5e1!3m2!1sen!2s!4v1793831115846!5m2!1sen!2s"
+    },
+    timeline: [
+      {
+        time: "10:30",
+        title: "Đón Tiếp Khách Mời",
+        desc: "Chào đón những vị khách quý, check-in chụp ảnh lưu niệm cùng Cô dâu & Chú rể.",
+        icon: "camera"
+      },
+      {
+        time: "10:45",
+        title: "Lễ Thành Hôn Trang Trọng",
+        desc: "Thời khắc thiêng liêng trao nhẫn cưới, cắt bánh và nhận lời chúc từ hai bên gia đình.",
+        icon: "ring"
+      },
+      {
+        time: "11:00",
+        title: "Khai Tiệc Mừng Cưới",
+        desc: "Thưởng thức tiệc ẩm thực tinh hoa và nâng ly chúc phúc đôi uyên ương.",
+        icon: "champagne"
+      },
+      {
+        time: "11:45",
+        title: "Giao Lưu & Âm Nhạc",
+        desc: "Giai điệu ngọt ngào, những trò chơi thú vị và những khoảnh khắc kỷ niệm khó quên.",
+        icon: "music"
+      }
+    ],
+    i18n_overrides: {
+  lang_vi: {
+    venue_name: "Trống Đồng Palace",
+    venue_hall: "Golden Hall",
+    venue_address: "72 Trần Đăng Ninh, Phường Nghĩa Đô, Hà Nội",
+    venue_time: "10:30 - Thứ Bảy, 26/12/2026",
+    countdown_date_lunar: "Thứ Bảy, ngày 26 tháng 12 năm 2026 (Tức ngày 18 tháng 11 năm Bính Ngọ)",
+    footer_date: "26 . 12 . 2026 | Trống Đồng Palace, Nghĩa Đô, Hà Nội",
+    timeline_event1_time: "10:30",
+    timeline_event1_title: "Đón Tiếp Khách Mời",
+    timeline_event1_desc: "Chào đón những vị khách quý, check-in chụp ảnh lưu niệm cùng Cô dâu & Chú rể.",
+    timeline_event2_time: "10:45",
+    timeline_event2_title: "Lễ Thành Hôn Trang Trọng",
+    timeline_event2_desc: "Thời khắc thiêng liêng trao nhẫn cưới, cắt bánh và nhận lời chúc từ hai bên gia đình.",
+    timeline_event3_time: "11:00",
+    timeline_event3_title: "Khai Tiệc Mừng Cưới",
+    timeline_event3_desc: "Thưởng thức tiệc ẩm thực tinh hoa và nâng ly chúc phúc đôi uyên ương.",
+    timeline_event4_time: "11:45",
+    timeline_event4_title: "Giao Lưu & Âm Nhạc",
+    timeline_event4_desc: "Giai điệu ngọt ngào, những trò chơi thú vị và những khoảnh khắc kỷ niệm khó quên.",
+    seo_title: "Lễ Thành Hôn (Nhà Gái): Mạnh Hiệp & Huyền Trang | 26.12.2026",
+    seo_description: "Trân trọng kính mời quý khách tới tham dự Lễ thành hôn (Nhà Gái) của Mạnh Hiệp & Huyền Trang tại Trống Đồng Palace vào lúc 10:30 ngày 26/12/2026."
+  },
+  lang_fr: {
+    venue_name: "Trống Đồng Palace",
+    venue_hall: "Golden Hall (Salle Dorée)",
+    venue_address: "72 rue Trần Đăng Ninh, quartier Nghĩa Đô, Hanoï",
+    venue_time: "10h30 - Samedi 26/12/2026",
+    countdown_date_lunar: "Samedi 26 décembre 2026 (18e jour du 11e mois lunaire, Année du Cheval de Feu)",
+    footer_date: "26 . 12 . 2026 | Trống Đồng Palace, Hanoï",
+    timeline_event1_time: "10:30",
+    timeline_event1_title: "Accueil des Invités",
+    timeline_event1_desc: "Bienvenue aux invités, photos souvenirs au photobooth avec les mariés.",
+    timeline_event2_time: "10:45",
+    timeline_event2_title: "Cérémonie de Mariage Solennelle",
+    timeline_event2_desc: "Échange d'alliances, coupe du gâteau et vœux d'amour éternel.",
+    timeline_event3_time: "11:00",
+    timeline_event3_title: "Banquet de Mariage",
+    timeline_event3_desc: "Dégustation de mets gastronomiques et toast de félicitations.",
+    timeline_event4_time: "11:45",
+    timeline_event4_title: "Échange & Musique",
+    timeline_event4_desc: "Mélodies douces, jeux conviviaux et instants inoubliables.",
+    seo_title: "Cérémonie de Mariage (Famille de la Mariée) : Mạnh Hiệp & Huyền Trang | 26.12.2026",
+    seo_description: "Nous avons le plaisir de vous inviter à la cérémonie de mariage (Famille de la Mariée) au Trống Đồng Palace, à 10h30 le samedi 26 décembre 2026."
+  },
+  lang_en: {
+    venue_name: "Trống Đồng Palace",
+    venue_hall: "Golden Hall",
+    venue_address: "No. 72 Trần Đăng Ninh, Nghĩa Đô Ward, Hanoi",
+    venue_time: "10:30 AM - Saturday, December 26, 2026",
+    countdown_date_lunar: "Saturday, December 26, 2026 (18th day of the 11th Lunar Month, Year of the Fire Horse)",
+    footer_date: "26 . 12 . 2026 | Trống Đồng Palace, Hanoi",
+    timeline_event1_time: "10:30 AM",
+    timeline_event1_title: "Guest Welcome & Reception",
+    timeline_event1_desc: "Welcome guests, check-in and take keepsake photos with Bride & Groom.",
+    timeline_event2_time: "10:45 AM",
+    timeline_event2_title: "Formal Wedding Ceremony",
+    timeline_event2_desc: "Exchange of rings, wedding cake cutting, and family blessings.",
+    timeline_event3_time: "11:00 AM",
+    timeline_event3_title: "Wedding Banquet",
+    timeline_event3_desc: "Enjoy exquisite cuisine and raise a toast to the newlyweds.",
+    timeline_event4_time: "11:45 AM",
+    timeline_event4_title: "Music & Social Gathering",
+    timeline_event4_desc: "Sweet melodies, fun games, and unforgettable celebration.",
+    seo_title: "Wedding Ceremony (Bride's Family): Mạnh Hiệp & Huyền Trang | Dec 26, 2026",
+    seo_description: "Cordially invite you to the wedding celebration (Bride's Family) at Trống Đồng Palace, 10:30 AM, Saturday, December 26, 2026."
+  },
+  lang_ko: {
+    venue_name: "Trống Đồng Palace (쫑동 팰리스)",
+    venue_hall: "Golden Hall (골든홀)",
+    venue_address: "하노이 응이아도동 쩐당닌 72 (72 Trần Đăng Ninh, Nghĩa Đô, Hanoi)",
+    venue_time: "2026년 12월 26일 토요일 오전 10:30",
+    countdown_date_lunar: "2026년 12월 26일 토요일 (병오년 음력 11월 18일)",
+    footer_date: "2026 . 12 . 26 | Trống Đồng Palace, 하노이",
+    timeline_event1_time: "10:30",
+    timeline_event1_title: "하객 맞이 & 포토타임",
+    timeline_event1_desc: "귀빈 맞이, 포토부스 기념사진 촬영 및 신랑·신부와의 만남.",
+    timeline_event2_time: "10:45",
+    timeline_event2_title: "본식 (결혼 예식)",
+    timeline_event2_desc: "예물 교환, 웨딩 케이크 커팅 및 양가 부모님 축복.",
+    timeline_event3_time: "11:00",
+    timeline_event3_title: "피로연 & 식사",
+    timeline_event3_desc: "정성껏 준비한 음식과 함께 축배를 들며 축하를 나눕니다.",
+    timeline_event4_time: "11:45",
+    timeline_event4_title: "축하 음악 & 교제",
+    timeline_event4_desc: "달콤한 음악과 즐거운 이벤트로 소중한 추억을 만듭니다.",
+    seo_title: "결혼식 (신부 측): Mạnh Hiệp & Huyền Trang | 2026.12.26",
+    seo_description: "2026년 12월 26일 토요일 오전 10시 30분 Trống Đồng Palace에서 열리는 Mạnh Hiệp & Huyền Trang의 결혼식(신부 측)에 정중히 초대합니다."
+  },
+  lang_es: {
+    venue_name: "Trống Đồng Palace",
+    venue_hall: "Golden Hall (Salón Dorado)",
+    venue_address: "Nº 72 Trần Đăng Ninh, Nghĩa Đô, Hanói",
+    venue_time: "10:30 - Sábado, 26/12/2026",
+    countdown_date_lunar: "Sábado, 26 de diciembre de 2026 (Día 18 del 11º mes lunar, Año del Caballo de Fuego)",
+    footer_date: "26 . 12 . 2026 | Trống Đồng Palace, Hanói",
+    timeline_event1_time: "10:30",
+    timeline_event1_title: "Recepción de Invitados",
+    timeline_event1_desc: "Bienvenida a los invitados, fotos de recuerdo con los Novios.",
+    timeline_event2_time: "10:45",
+    timeline_event2_title: "Ceremonia Nupcial Solemne",
+    timeline_event2_desc: "Intercambio de alianzas, corte de tarta y bendiciones.",
+    timeline_event3_time: "11:00",
+    timeline_event3_title: "Banquete de Bodas",
+    timeline_event3_desc: "Degustación de alta gastronomía y brindis con familiares y amigos.",
+    timeline_event4_time: "11:45",
+    timeline_event4_title: "Música & Celebración",
+    timeline_event4_desc: "Música en vivo, actividades divertidas y recuerdos inolvidables.",
+    seo_title: "Ceremonia de Boda (Familia de la Novia): Mạnh Hiệp & Huyền Trang | 26.12.2026",
+    seo_description: "Te invitamos cordialmente a la ceremonia de boda (Familia de la Novia) en Trống Đồng Palace a las 10:30 el sábado 26 de diciembre de 2026."
+  }
+}
+  },
+
+  // --- CẤU HÌNH ACTIVE / RUNTIME EVENT (Dùng trực tiếp khi mở source standalone) ---
+  event: {
+    event_side: "nhatrai",
+    event_side_label: "Nhà Trai",
+    dateTimeStr: "26/12/2026 - 18:00",
+    solarDate: "2026-12-26T18:00:00+07:00",
+    lunarDate: "Ngày 18 tháng 11 năm Bính Ngọ",
+    venue: {
+      name: "Nguyên Đình Long Biên",
+      hall: "Tầng 3",
+      address: "TASCO Mall, 7-9, Nguyễn Văn Linh, Việt Hưng, Hà Nội",
+      mapsNavigationUrl: "https://maps.app.goo.gl/qddA5f4H8z5AV6HTA",
+      mapsEmbedIframeUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6404.692059804373!2d105.89079012693533!3d21.050862937015783!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135a9acc56038bf%3A0xfe2bcf18b37652b4!2zTmd1ecOqbiDEkMOsbmggTG9uZyBCacOqbg!5e1!3m2!1sen!2s!4v1793830376819!5m2!1sen!2s"
+    },
+    timeline: [
+      {
+        time: "18:00",
+        title: "Đón Tiếp Khách Mời",
+        desc: "Chào đón những vị khách quý, check-in chụp ảnh lưu niệm tại photobooth sang trọng cùng Cô dâu & Chú rể.",
+        icon: "camera"
+      },
+      {
+        time: "18:30",
+        title: "Lễ Thành Hôn Trang Trọng",
+        desc: "Thời khắc thiêng liêng trao nhẫn cưới, cắt bánh, rót rượu mừng và trao nhau lời hẹn ước trăm năm.",
+        icon: "ring"
+      },
+      {
+        time: "19:00",
+        title: "Khai Tiệc Mừng Cưới",
+        desc: "Thưởng thức tiệc ẩm thực tinh hoa cùng lời chúc phúc từ gia đình, người thân và bạn bè.",
+        icon: "champagne"
+      },
+      {
+        time: "20:00",
+        title: "Giao Lưu & Âm Nhạc",
+        desc: "Cùng hòa mình vào giai điệu ngọt ngào, những trò chơi thú vị và bốc thăm may mắn.",
+        icon: "music"
+      }
+    ],
+    dresscode: {
+      description: "Để tạo nên những khung hình kỷ niệm hài hòa và ấm áp, gia đình rất mong quý khách lựa chọn trang phục theo bảng màu:",
+      palette: [
+        { name: "Be Kem (Cream Beige)", color: "#F5EFE6", border: "#C5A059" },
+        { name: "Đỏ Đô (Burgundy)", color: "#721121", border: "#C5A059" },
+        { name: "Vàng Champagne", color: "#C5A059", border: "#F9F6F0" },
+        { name: "Nâu Ấm (Warm Amber)", color: "#5E0B15", border: "#C5A059" },
+        { name: "Đen Sang Trọng", color: "#1C1917", border: "#A8A29E" }
+      ],
+      note: "Quý khách vui lòng tránh mặc trang phục màu trắng tinh khôi để tôn vinh bộ váy cưới của Cô dâu."
+    },
+    qr: {
+      bankName: "Vietcombank",
+      accountNumber: "1234567890",
+      accountHolder: "DAO MANH HIEP",
+      qrImageUrl: ""
     }
   },
 
@@ -340,10 +668,10 @@ const WEDDING_CONFIG = {
     ]
   },
 
-  // --- 8. SEO & OPEN GRAPH (METADATA) ---
+  // --- 8. SEO & OPEN GRAPH (METADATA DÙNG CHUNG) ---
   seo: {
     title: "Lễ Thành Hôn: Mạnh Hiệp & Huyền Trang | 26.12.2026",
-    description: "Trân trọng kính mời quý khách tới tham dự Lễ thành hôn của Mạnh Hiệp & Huyền Trang tại Trống Đồng Palace Cầu Giấy vào ngày 26/12/2026.",
+    description: "Trân trọng kính mời quý khách tới tham dự Lễ thành hôn của Mạnh Hiệp & Huyền Trang vào ngày 26/12/2026.",
     shareImage: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=80",
     themeColor: "#721121"
   },
@@ -382,6 +710,7 @@ const WEDDING_CONFIG = {
         audio_alert: "Trình duyệt chặn phát tự động. Vui lòng bấm nút 'Bật nhạc' để kích hoạt.",
         // Hero
         hero_save_date: "Save Our Date",
+        hero_line_1: "Trân trọng kính mời",
         hero_guest_name: "Kính gửi: Quý khách",
         hero_guest_prefix: "Kính gửi: ",
         hero_guest_default: "Quý khách",
@@ -477,6 +806,7 @@ const WEDDING_CONFIG = {
         rsvp_side_label: "Bạn là khách của:",
         rsvp_side_groom: "Nhà Trai (Hiệp)",
         rsvp_side_bride: "Nhà Gái (Trang)",
+        rsvp_side_friend: "Bạn Thân",
         rsvp_message_label: "Lời chúc gửi tới Cô dâu &amp; Chú rể",
         rsvp_message_placeholder: "Gửi lời chúc phúc ngọt ngào tới Mạnh Hiệp & Huyền Trang tại đây...",
         rsvp_submit: "Gửi Xác Nhận &amp; Lời Chúc",
@@ -525,6 +855,7 @@ const WEDDING_CONFIG = {
         audio_alert: "Le navigateur bloque la lecture automatique. Veuillez cliquer sur 'Activer la musique' pour démarrer.",
         // Hero
         hero_save_date: "Réservez la Date",
+        hero_line_1: "Invitation cordiale",
         hero_guest_name: "Cher(e) invité(e) : Invité d'honneur",
         hero_guest_prefix: "Cher(e) invité(e) : ",
         hero_guest_default: "Invité d'honneur",
@@ -620,6 +951,7 @@ const WEDDING_CONFIG = {
         rsvp_side_label: "Vous êtes invité(e) par :",
         rsvp_side_groom: "Famille du Marié (Hiệp)",
         rsvp_side_bride: "Famille de la Mariée (Trang)",
+        rsvp_side_friend: "Ami(e) Proche",
         rsvp_message_label: "Message de félicitations pour les Mariés",
         rsvp_message_placeholder: "Écrivez vos vœux les plus chaleureux pour Mạnh Hiệp & Huyền Trang ici...",
         rsvp_submit: "Envoyer ma Confirmation &amp; Vœux",
@@ -668,6 +1000,7 @@ const WEDDING_CONFIG = {
         audio_alert: "Autoplay was blocked by your browser. Please tap 'Play Music' to start.",
         // Hero
         hero_save_date: "Save Our Date",
+        hero_line_1: "Cordially Invited",
         hero_guest_name: "To: Honored Guest",
         hero_guest_prefix: "To: ",
         hero_guest_default: "Honored Guest",
@@ -763,39 +1096,40 @@ const WEDDING_CONFIG = {
         rsvp_side_label: "You are a guest of:",
         rsvp_side_groom: "Groom's Family (Hiệp)",
         rsvp_side_bride: "Bride's Family (Trang)",
+        rsvp_side_friend: "Close Friend",
         rsvp_message_label: "Wishes for Bride &amp; Groom",
-        rsvp_message_placeholder: "Send your warmest wishes to Mạnh Hiệp & Huyền Trang here...",
-        rsvp_submit: "Confirm &amp; Send Wishes",
+        rsvp_message_placeholder: "Send your sweetest wishes to Mạnh Hiệp & Huyền Trang here...",
+        rsvp_submit: "Send RSVP &amp; Best Wishes",
         rsvp_submitting: "Sending...",
-        rsvp_alert_name: "Please enter your name!",
-        rsvp_alert_error: "A minor error occurred, but your message has been recorded on the page. Thank you!",
-        guestbook_title: "Guestbook &amp; Wishes",
-        guestbook_modal_title: "Sent Successfully",
-        guestbook_modal_desc: "Thank you so much! Your presence and warm wishes mean the world to our families.",
+        rsvp_alert_name: "Please enter your full name!",
+        rsvp_alert_error: "There was a minor error sending your RSVP, but your wish has been recorded on the page. Thank you!",
+        guestbook_title: "Guestbook &amp; Warm Wishes",
+        guestbook_modal_title: "Successfully Sent",
+        guestbook_modal_desc: "Thank you so much! Your presence and warm wishes are a great honor and joy for our families.",
         guestbook_modal_close: "Close",
         guestbook_just_now: "Just now",
         // Footer
         footer_quote: "“Looking forward to celebrating our happiest day with you!”",
-        footer_date: "December 26, 2026 | Trống Đồng Palace Cầu Giấy, Hanoi",
+        footer_date: "DECEMBER 26, 2026 | Trống Đồng Palace Cầu Giấy, Hanoi",
         // SEO
         seo_title: "Wedding Ceremony: Mạnh Hiệp & Huyền Trang | 26.12.2026",
-        seo_description: "Cordially invite you to celebrate the wedding ceremony of Mạnh Hiệp & Huyền Trang at Trống Đồng Palace Cầu Giấy on December 26, 2026."
+        seo_description: "Cordially invite you to the wedding ceremony of Mạnh Hiệp & Huyền Trang at Trống Đồng Palace Cầu Giấy on December 26, 2026."
       },
       ko: {
         code: "ko",
         name: "한국어",
         flag: "🇰🇷",
         // Envelope
-        envelope_screen_aria: "청첩장 봉투 열기 화면",
+        envelope_screen_aria: "청첩장 열기 화면",
         envelope_tag: "소중한 청첩장",
-        envelope_guest_name: "정중히 모십니다: 귀빈 여러분",
-        envelope_guest_prefix: "정중히 모십니다: ",
-        envelope_guest_default: "귀빈 여러분",
+        envelope_guest_name: "귀하: 소중한 분",
+        envelope_guest_prefix: "귀하: ",
+        envelope_guest_default: "소중한 분",
         envelope_seal_title: "터치하여 청첩장 열기",
         envelope_couple: "Mạnh Hiệp &amp; Huyền Trang",
-        envelope_date: "2026년 12월 26일 &bull; 하노이",
+        envelope_date: "2026 . 12 . 26 &bull; 하노이",
         envelope_btn_open: "청첩장 열기",
-        envelope_audio_hint: "봉투를 열면 감미로운 음악이 자동으로 재생됩니다",
+        envelope_audio_hint: "청첩장을 열면 감미로운 음악이 자동 재생됩니다",
         // Audio Floating Bar
         audio_bar_title: "배경음악 제어",
         audio_bar_aria: "배경음악 제어",
@@ -811,6 +1145,7 @@ const WEDDING_CONFIG = {
         audio_alert: "브라우저에서 자동 재생이 차단되었습니다. '음악 재생'을 눌러주세요.",
         // Hero
         hero_save_date: "Save Our Date",
+        hero_line_1: "정중히 초대합니다",
         hero_guest_name: "귀하: 소중한 분",
         hero_guest_prefix: "귀하: ",
         hero_guest_default: "소중한 분",
@@ -828,7 +1163,7 @@ const WEDDING_CONFIG = {
         groom_name: "Đào Mạnh Hiệp",
         groom_parents: "Đào Mạnh Hiển &amp; Nguyễn Thị Hà 의 아들",
         groom_img_alt: "신랑 Mạnh Hiệp",
-        groom_desc: "“따뜻한 마음과 예술을 사랑하는 엔지니어, 운명과 사랑하는 이의 환한 미소를 항상 믿는 사람.”" ,
+        groom_desc: "“따뜻한 마음과 예술을 사랑하는 엔지니어, 운명과 사랑하는 이의 환한 미소를 항상 믿는 사람.”",
         bride_title: "신부",
         bride_name: "Nguyễn Huyền Trang",
         bride_parents: "Nguyễn Mạnh Hòa &amp; Nguyễn Thu Huyền 의 딸",
@@ -906,6 +1241,7 @@ const WEDDING_CONFIG = {
         rsvp_side_label: "구분:",
         rsvp_side_groom: "신랑 측 (Hiệp)",
         rsvp_side_bride: "신부 측 (Trang)",
+        rsvp_side_friend: "절친",
         rsvp_message_label: "신랑 &amp; 신부에게 전하는 축하 메시지",
         rsvp_message_placeholder: "Mạnh Hiệp & Huyền Trang 부부에게 따뜻한 축복의 글을 남겨주세요...",
         rsvp_submit: "참석 확인 &amp; 축하 글 보내기",
@@ -954,6 +1290,7 @@ const WEDDING_CONFIG = {
         audio_alert: "El navegador bloqueó la reproducción automática. Toque 'Activar Música' para iniciar.",
         // Hero
         hero_save_date: "Reserva la Fecha",
+        hero_line_1: "Cordialmente Invitados",
         hero_guest_name: "Estimado(a): Invitado de Honor",
         hero_guest_prefix: "Estimado(a): ",
         hero_guest_default: "Invitado de Honor",
@@ -1049,6 +1386,7 @@ const WEDDING_CONFIG = {
         rsvp_side_label: "Invitado(a) por parte de:",
         rsvp_side_groom: "Familia del Novio (Hiệp)",
         rsvp_side_bride: "Familia de la Novia (Trang)",
+        rsvp_side_friend: "Amigo(a) Cercano(a)",
         rsvp_message_label: "Mensaje para los Novios",
         rsvp_message_placeholder: "Escribe tus mejores deseos para Mạnh Hiệp & Huyền Trang aquí...",
         rsvp_submit: "Confirmar Asistencia &amp; Enviar Votos",
