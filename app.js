@@ -74,7 +74,7 @@
     if (currentGuestName) {
       // Có tên riêng được truyền qua URL (?to=David / ?name=Trang...)
       const prefixEnvelope = dict.envelope_guest_prefix || "Trân trọng kính mời: ";
-      const prefixHero = dict.hero_guest_prefix || "Kính gửi: ";
+      const prefixHero = dict.hero_guest_prefix || "Trân trọng kính mời: ";
       if (guestGreetingEl) {
         guestGreetingEl.textContent = `${prefixEnvelope}${currentGuestName}`;
       }
@@ -87,7 +87,7 @@
         guestGreetingEl.textContent = dict.envelope_guest_name || "Trân trọng kính mời: Quý khách";
       }
       if (heroGuestGreetingEl) {
-        heroGuestGreetingEl.textContent = dict.hero_guest_name || "Kính gửi: Quý khách";
+        heroGuestGreetingEl.textContent = dict.hero_guest_name || "Trân trọng kính mời quý khách tới tham dự";
       }
     }
   }

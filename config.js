@@ -670,8 +670,8 @@ const WEDDING_CONFIG = {
 
   // --- 8. SEO & OPEN GRAPH (METADATA DÙNG CHUNG) ---
   seo: {
-    title: "Lễ Thành Hôn: Mạnh Hiệp & Huyền Trang | 26.12.2026",
-    description: "Trân trọng kính mời quý khách tới tham dự Lễ thành hôn của Mạnh Hiệp & Huyền Trang vào ngày 26/12/2026.",
+    title: "Tiệc Thành Hôn: Mạnh Hiệp & Huyền Trang | 26.12.2026",
+    description: "Trân trọng kính mời quý khách tới tham dự Tiệc thành hôn của Mạnh Hiệp & Huyền Trang vào ngày 26/12/2026.",
     shareImage: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=80",
     themeColor: "#721121"
   },
@@ -709,12 +709,12 @@ const WEDDING_CONFIG = {
         audio_default_title: "Nhạc nền",
         audio_alert: "Trình duyệt chặn phát tự động. Vui lòng bấm nút 'Bật nhạc' để kích hoạt.",
         // Hero
-        hero_save_date: "Save Our Date",
+        hero_save_date: "NGÀY CHUNG ĐÔI",
         hero_line_1: "Trân trọng kính mời",
-        hero_guest_name: "Kính gửi: Quý khách",
-        hero_guest_prefix: "Kính gửi: ",
+        hero_guest_name: "Trân trọng kính mời quý khách tới tham dự",
+        hero_guest_prefix: "Trân trọng kính mời: ",
         hero_guest_default: "Quý khách",
-        hero_title: "Lễ Thành Hôn",
+        hero_title: "Tiệc Thành Hôn",
         hero_couple: "Mạnh Hiệp & Huyền Trang",
         hero_date: "26 . 12 . 2026",
         hero_location: "HÀ NỘI",

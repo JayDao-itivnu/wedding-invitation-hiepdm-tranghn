@@ -347,7 +347,7 @@ function buildRootHtml(config) {
 
     <!-- Subtitle -->
     <p class="text-xs sm:text-sm uppercase tracking-[0.35em] text-[#C5A059] font-medium mb-1.5">
-      Save Our Date • 26 . 12 . 2026
+      NGÀY CHUNG ĐÔI • 26 . 12 . 2026
     </p>
 
     <!-- Couple Names -->
