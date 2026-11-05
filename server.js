@@ -84,9 +84,12 @@ server.listen(PORT, HOST, () => {
   console.log(`\n============================================================`);
   console.log(`🎉 PREVIEW SERVER ĐANG CHẠY TẠI: http://localhost:${PORT}/`);
   console.log(`============================================================`);
-  console.log(`👰🤵 [Trang Kỷ Niệm Gốc] : http://localhost:${PORT}/`);
-  console.log(`🎩 [Link Thiệp Nhà Trai] : http://localhost:${PORT}/${ntSlug}/`);
-  console.log(`💐 [Link Thiệp Nhà Gái]  : http://localhost:${PORT}/${ngSlug}/`);
-  console.log(`💌 [Thử Tên Riêng URL]   : http://localhost:${PORT}/${ntSlug}/?to=B%E1%BA%A1n+Huy%E1%BB%81n`);
+  console.log(`🌐 [Cổng Chọn Thiệp Root] : http://localhost:${PORT}/`);
+  console.log(`🎩 [Thiệp Mời Nhà Trai]   : http://localhost:${PORT}/nhatrai/`);
+  console.log(`💐 [Thiệp Mời Nhà Gái]    : http://localhost:${PORT}/nhagai/`);
+  console.log(`🔒 [Slug Hash Nhà Trai]   : http://localhost:${PORT}/${ntSlug}/`);
+  console.log(`🔒 [Slug Hash Nhà Gái]    : http://localhost:${PORT}/${ngSlug}/`);
+  console.log(`💌 [Test Cá Nhân Hóa]     : http://localhost:${PORT}/nhatrai/?to=B%E1%BA%A1n+Huy%E1%BB%81n`);
+  console.log(`⚡ [Test Redirect Param]  : http://localhost:${PORT}/?side=nhatrai&to=B%E1%BA%A1n+Huy%E1%BB%81n`);
   console.log(`============================================================\n`);
 });
