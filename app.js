@@ -34,6 +34,7 @@
 
     // Khởi tạo i18n trước để xác định ngôn ngữ đúng ngay từ đầu
     initI18n();
+    initCoupleImages();
     initPersonalizedGreeting();
     initAudio();
     initEnvelope();
@@ -45,6 +46,45 @@
     initMapShield();
     initRSVPAndGuestbook();
   });
+
+  // --- 1b. COUPLE AVATARS & HERO IMAGE INITIALIZATION ---
+  function initCoupleImages() {
+    if (typeof WEDDING_CONFIG === "undefined" || !WEDDING_CONFIG.couple) return;
+
+    const fallbackGroom = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80";
+    const fallbackBride = "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80";
+
+    const parseFn = typeof parseGoogleDriveUrl === "function" ? parseGoogleDriveUrl : (u) => u;
+
+    // Ảnh đại diện Chú rể
+    const groomImg = document.getElementById("groom-avatar");
+    if (groomImg && WEDDING_CONFIG.couple.groom?.avatar) {
+      const groomSrc = parseFn(WEDDING_CONFIG.couple.groom.avatar, fallbackGroom);
+      groomImg.src = groomSrc;
+      groomImg.onerror = function () {
+        this.onerror = null;
+        this.src = fallbackGroom;
+      };
+    }
+
+    // Ảnh đại diện Cô dâu
+    const brideImg = document.getElementById("bride-avatar");
+    if (brideImg && WEDDING_CONFIG.couple.bride?.avatar) {
+      const brideSrc = parseFn(WEDDING_CONFIG.couple.bride.avatar, fallbackBride);
+      brideImg.src = brideSrc;
+      brideImg.onerror = function () {
+        this.onerror = null;
+        this.src = fallbackBride;
+      };
+    }
+
+    // Ảnh bìa Hero Section (nếu được thiết lập trong config)
+    const heroBgImg = document.getElementById("hero-bg-img");
+    const heroImage = WEDDING_CONFIG.heroImage || WEDDING_CONFIG.couple?.heroImage || WEDDING_CONFIG.seo?.shareImage;
+    if (heroBgImg && heroImage) {
+      heroBgImg.src = parseFn(heroImage, heroBgImg.src);
+    }
+  }
 
   // --- 2. PERSONALIZED GREETING (?to=... hoặc ?guest=...) ---
   function initPersonalizedGreeting() {
@@ -849,51 +889,72 @@
     });
   }
 
+  function createGalleryCard(item, originalIndex, heightClass, lang) {
+    const card = document.createElement("div");
+    card.className = `bento-card ${heightClass} group w-full`;
+    card.setAttribute("data-index", originalIndex);
+
+    const directSrc = parseGoogleDriveUrl(item.src);
+    const fallbackSrc = "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=80";
+
+    const title = (lang !== "vi" && item["title_" + lang]) ? item["title_" + lang] : item.title;
+    const subtitle = (lang !== "vi" && item["subtitle_" + lang]) ? item["subtitle_" + lang] : (item.subtitle || "");
+    const desc = (lang !== "vi" && item["desc_" + lang]) ? item["desc_" + lang] : (item.desc || "");
+
+    card.innerHTML = `
+      <img 
+        src="${directSrc}" 
+        alt="${title}" 
+        loading="lazy" 
+        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+        onerror="this.onerror=null; this.src='${fallbackSrc}';"
+      />
+      <div class="bento-overlay">
+        <span class="text-xs tracking-widest uppercase text-[#C5A059] font-medium mb-1 drop-shadow-sm">${subtitle}</span>
+        <h4 class="font-serifLuxury text-lg sm:text-xl md:text-2xl text-[#F9F6F0] font-semibold leading-tight drop-shadow-md">${title}</h4>
+        ${desc ? `<p class="text-xs text-[#EBE3D5] opacity-90 mt-1">${desc}</p>` : ""}
+      </div>
+    `;
+
+    card.addEventListener("click", () => openLightbox(originalIndex));
+    return card;
+  }
+
   function renderGallery(lang) {
     const galleryGrid = document.getElementById("gallery-grid");
     if (!galleryGrid || !WEDDING_CONFIG.gallery) return;
 
     galleryGrid.innerHTML = "";
 
-    WEDDING_CONFIG.gallery.forEach((item, index) => {
-      const card = document.createElement("div");
-      let spanClass = "col-span-1 md:col-span-1 row-span-1";
-      if (item.aspect === "tall") {
-        spanClass = "col-span-1 md:col-span-1 md:row-span-2 h-[380px] md:h-[500px]";
-      } else if (item.aspect === "wide") {
-        spanClass = "col-span-1 md:col-span-2 h-[260px] md:h-[320px]";
-      } else {
-        spanClass = "col-span-1 h-[260px] md:h-[320px]";
-      }
+    const gallery = WEDDING_CONFIG.gallery;
 
-      card.className = `bento-card ${spanClass} group`;
-      card.setAttribute("data-index", index);
+    // Phương án 2: Bento So Le Cân Bằng 3 Cột (Balanced Staggered Bento)
+    // Cột 1: Ảnh 1 (ngang - 260px) + Ảnh 4 (đứng - 390px) -> Tổng: 650px
+    // Cột 2: Ảnh 2 (đứng - 390px) + Ảnh 5 (ngang - 260px) -> Tổng: 650px
+    // Cột 3: Ảnh 3 (ngang - 260px) + Ảnh 6 (đứng - 390px) -> Tổng: 650px
+    // Cả 3 cột đều có chiều cao bằng nhau tuyệt đối, không khuyết góc!
+    if (gallery.length === 6) {
+      const colPairs = [
+        { topIdx: 0, topH: "h-[230px] sm:h-[250px] md:h-[260px]", btmIdx: 3, btmH: "h-[340px] sm:h-[370px] md:h-[390px]" },
+        { topIdx: 1, topH: "h-[340px] sm:h-[370px] md:h-[390px]", btmIdx: 4, btmH: "h-[230px] sm:h-[250px] md:h-[260px]" },
+        { topIdx: 2, topH: "h-[230px] sm:h-[250px] md:h-[260px]", btmIdx: 5, btmH: "h-[340px] sm:h-[370px] md:h-[390px]" }
+      ];
 
-      const directSrc = parseGoogleDriveUrl(item.src);
-      const fallbackSrc = "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=80";
-
-      const title = (lang !== "vi" && item["title_" + lang]) ? item["title_" + lang] : item.title;
-      const subtitle = (lang !== "vi" && item["subtitle_" + lang]) ? item["subtitle_" + lang] : (item.subtitle || "");
-      const desc = (lang !== "vi" && item["desc_" + lang]) ? item["desc_" + lang] : (item.desc || "");
-
-      card.innerHTML = `
-        <img 
-          src="${directSrc}" 
-          alt="${title}" 
-          loading="lazy" 
-          class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-          onerror="this.onerror=null; this.src='${fallbackSrc}';"
-        />
-        <div class="bento-overlay">
-          <span class="text-xs tracking-widest uppercase text-[#C5A059] font-medium mb-1">${subtitle}</span>
-          <h4 class="font-serifLuxury text-xl md:text-2xl text-[#F9F6F0] font-semibold">${title}</h4>
-          ${desc ? `<p class="text-xs text-[#EBE3D5] opacity-90 mt-1">${desc}</p>` : ""}
-        </div>
-      `;
-
-      card.addEventListener("click", () => openLightbox(index));
-      galleryGrid.appendChild(card);
-    });
+      colPairs.forEach((col) => {
+        const colDiv = document.createElement("div");
+        colDiv.className = "flex flex-col gap-4 sm:gap-6 w-full";
+        colDiv.appendChild(createGalleryCard(gallery[col.topIdx], col.topIdx, col.topH, lang));
+        colDiv.appendChild(createGalleryCard(gallery[col.btmIdx], col.btmIdx, col.btmH, lang));
+        galleryGrid.appendChild(colDiv);
+      });
+    } else {
+      // Fallback linh hoạt nếu số ảnh khác 6
+      gallery.forEach((item, index) => {
+        const isTall = item.aspect === "tall";
+        const hClass = isTall ? "h-[340px] sm:h-[380px]" : "h-[230px] sm:h-[260px]";
+        galleryGrid.appendChild(createGalleryCard(item, index, hClass, lang));
+      });
+    }
 
     // Nếu lightbox đang mở, cập nhật luôn nội dung
     const lightboxModal = document.getElementById("lightbox-modal");

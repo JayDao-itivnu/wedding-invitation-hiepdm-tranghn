@@ -1,11 +1,33 @@
 const http = require("http");
 const fs = require("fs");
 const path = require("path");
+const { execSync } = require("child_process");
 
 const PORT = 3000;
 const HOST = "0.0.0.0";
 const ROOT_DIR = __dirname;
 const DIST_DIR = path.join(ROOT_DIR, "dist");
+
+// Tự động giải phóng cổng nếu có server cũ đang chạy ngầm
+function freePort(port) {
+  try {
+    const out = execSync(`netstat -ano | findstr :${port}`).toString();
+    const currentPid = process.pid.toString();
+    const pids = [...new Set(out.split("\n")
+      .filter(l => l.includes("LISTENING"))
+      .map(l => l.trim().split(/\s+/).pop())
+      .filter(p => p && p !== "0" && p !== currentPid)
+    )];
+    for (const p of pids) {
+      try {
+        execSync(`taskkill /f /pid ${p}`);
+        console.log(`💡 Đã tự động tắt tiến trình cũ (PID: ${p}) trên cổng ${port}.`);
+      } catch (err) {}
+    }
+  } catch (err) {}
+}
+
+freePort(PORT);
 
 // Tìm slug Nhà Trai & Nhà Gái từ dist nếu có
 function getSlugs() {
@@ -73,10 +95,25 @@ const server = http.createServer((req, res) => {
     const ext = path.extname(filePath).toLowerCase();
     const contentType = mimeTypes[ext] || "application/octet-stream";
 
-    res.writeHead(200, { "Content-Type": contentType });
+    res.writeHead(200, {
+      "Content-Type": contentType,
+      "Cache-Control": "no-cache, no-store, must-revalidate",
+      "Pragma": "no-cache",
+      "Expires": "0"
+    });
     const stream = fs.createReadStream(filePath);
     stream.pipe(res);
   });
+});
+
+server.on("error", (e) => {
+  if (e.code === "EADDRINUSE") {
+    console.error(`\n❌ Cổng ${PORT} đang được sử dụng bởi một tiến trình khác.`);
+    console.error(`💡 Mẹo: Hãy đóng cửa sổ preview server cũ hoặc chạy lại start-preview.bat.\n`);
+    process.exit(1);
+  } else {
+    console.error("Server error:", e);
+  }
 });
 
 server.listen(PORT, HOST, () => {

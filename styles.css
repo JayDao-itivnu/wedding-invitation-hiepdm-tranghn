@@ -652,13 +652,20 @@ section {
   position: absolute;
   inset: 0;
   background: linear-gradient(180deg, transparent 40%, rgba(43, 9, 14, 0.85) 100%);
-  opacity: 0;
+  opacity: 0.9;
   transition: opacity 0.3s ease;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: 20px;
+  padding: 16px;
   color: #F9F6F0;
+  pointer-events: none;
+}
+
+@media (min-width: 640px) {
+  .bento-overlay {
+    padding: 20px;
+  }
 }
 
 .bento-card:hover .bento-overlay {

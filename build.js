@@ -64,6 +64,44 @@ function copyFile(src, dest) {
   fs.copyFileSync(src, dest);
 }
 
+function parseGoogleDriveUrl(urlOrId, fallbackUrl = "") {
+  if (!urlOrId || typeof urlOrId !== "string") {
+    return fallbackUrl || "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=80";
+  }
+
+  const trimmed = urlOrId.trim();
+
+  if (!trimmed.includes("drive.google.com") && !trimmed.includes("docs.google.com")) {
+    const isBareGoogleId = /^[a-zA-Z0-9_-]{25,50}$/.test(trimmed);
+    if (!isBareGoogleId) {
+      return trimmed;
+    }
+  }
+
+  let fileId = "";
+  const matchFileD = trimmed.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+  if (matchFileD && matchFileD[1]) {
+    fileId = matchFileD[1];
+  }
+
+  if (!fileId) {
+    const matchIdParam = trimmed.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+    if (matchIdParam && matchIdParam[1]) {
+      fileId = matchIdParam[1];
+    }
+  }
+
+  if (!fileId && /^[a-zA-Z0-9_-]{25,50}$/.test(trimmed)) {
+    fileId = trimmed;
+  }
+
+  if (fileId) {
+    return `https://lh3.googleusercontent.com/d/${fileId}`;
+  }
+
+  return trimmed || fallbackUrl;
+}
+
 // --- Load source config ---
 function loadConfig() {
   const configPath = path.join(SRC_DIR, "config.js");
@@ -206,6 +244,42 @@ function buildSideHtml(htmlContent, config, side) {
     );
   }
 
+  // Update groom & bride avatars
+  if (config.couple?.groom?.avatar) {
+    const groomAvatar = parseGoogleDriveUrl(config.couple.groom.avatar);
+    htmlContent = htmlContent.replace(/(<img\b[^>]*\bid="groom-avatar"[^>]*>)/i, (m) =>
+      m.replace(/src="[^"]*"/, `src="${escapeHtmlAttr(groomAvatar)}"`)
+    );
+  }
+  if (config.couple?.bride?.avatar) {
+    const brideAvatar = parseGoogleDriveUrl(config.couple.bride.avatar);
+    htmlContent = htmlContent.replace(/(<img\b[^>]*\bid="bride-avatar"[^>]*>)/i, (m) =>
+      m.replace(/src="[^"]*"/, `src="${escapeHtmlAttr(brideAvatar)}"`)
+    );
+  }
+
+  // Update hero background image if specified
+  const heroImageSrc = config.heroImage || config.couple?.heroImage || config.seo?.shareImage;
+  if (heroImageSrc) {
+    const heroImg = parseGoogleDriveUrl(heroImageSrc);
+    htmlContent = htmlContent.replace(/(<img\b[^>]*\bid="hero-bg-img"[^>]*>)/i, (m) =>
+      m.replace(/src="[^"]*"/, `src="${escapeHtmlAttr(heroImg)}"`)
+    );
+  }
+
+  // Update SEO og:image & twitter:image
+  if (config.seo?.shareImage) {
+    const shareImg = parseGoogleDriveUrl(config.seo.shareImage);
+    htmlContent = htmlContent.replace(
+      /(<meta\s+property="og:image"\s+content=")[^"]*(")/,
+      `$1${escapeHtmlAttr(shareImg)}$2`
+    );
+    htmlContent = htmlContent.replace(
+      /(<meta\s+name="twitter:image"\s+content=")[^"]*(")/,
+      `$1${escapeHtmlAttr(shareImg)}$2`
+    );
+  }
+
   return htmlContent;
 }
 
@@ -214,7 +288,7 @@ function buildRootHtml(config) {
   const groomName = config.couple?.groom?.name || "Mạnh Hiệp";
   const brideName = config.couple?.bride?.name || "Huyền Trang";
   const logo = config.couple?.logo || "logo-cuoi-H-T-tach-nen-2048px.svg";
-  const shareImage = config.seo?.shareImage || "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=80";
+  const shareImage = parseGoogleDriveUrl(config.seo?.shareImage || "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=80");
   const themeColor = config.seo?.themeColor || "#721121";
 
   const nt = config.event_nhatrai || {};
@@ -578,9 +652,13 @@ function build() {
 
   const config = loadConfig();
 
-  // Clean dist
+  // Clean dist (safely handle locked files if server is running)
   if (fs.existsSync(DIST_DIR)) {
-    fs.rmSync(DIST_DIR, { recursive: true, force: true });
+    try {
+      fs.rmSync(DIST_DIR, { recursive: true, force: true });
+    } catch (err) {
+      console.warn("⚠️  Một số file trong dist đang mở (server đang chạy), tiếp tục ghi đè các file cập nhật.");
+    }
   }
   ensureDir(DIST_DIR);
 
