@@ -1201,6 +1201,11 @@
           rsvpModal.classList.remove("active");
         }
       });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && rsvpModal.classList.contains("active")) {
+          rsvpModal.classList.remove("active");
+        }
+      });
     }
   }
 
@@ -1261,7 +1266,7 @@
   function appendWishElement(container, name, side, content, timeStr, isNew = false) {
     const card = document.createElement("div");
     card.className = `p-4 md:p-5 rounded-2xl glass-panel border border-[#C5A059]/30 transition-all duration-500 ${
-      isNew ? "ring-2 ring-[#721121] scale-102 bg-white" : ""
+      isNew ? "ring-2 ring-[#721121] shadow-lg bg-white/95 scale-[1.01]" : ""
     }`;
 
     const sideLower = (side || "").toLowerCase();
@@ -1284,8 +1289,8 @@
     }
 
     card.innerHTML = `
-      <div class="flex items-center justify-between mb-2">
-        <div class="flex items-center gap-2">
+      <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+        <div class="flex flex-wrap items-center gap-2">
           <span class="font-serifLuxury font-bold text-lg text-[#2B090E]">${escapeHtml(name)}</span>
           <span class="text-xs px-2.5 py-0.5 rounded-full border ${badgeClass} font-medium">${escapeHtml(side)}</span>
         </div>

@@ -125,11 +125,43 @@ function doPost(e) {
   }
 }
 
-// Hàm hỗ trợ kiểm tra trạng thái hoạt động của Script
+// Hàm hỗ trợ kiểm tra trạng thái hoạt động & lấy danh sách lời chúc cho Guestbook Wall
 function doGet(e) {
-  return ContentService
-    .createTextOutput(JSON.stringify({ status: "active", message: "Wedding RSVP API is online" }))
-    .setMimeType(ContentService.MimeType.JSON);
+  try {
+    var action = (e && e.parameter && e.parameter.action) ? e.parameter.action : "";
+    if (action === "getWishes") {
+      var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+      var rows = sheet.getDataRange().getValues();
+      var wishes = [];
+      // Đọc ngược từ dòng mới nhất lên dòng cũ nhất (bỏ qua dòng tiêu đề 0)
+      for (var i = rows.length - 1; i >= 1; i--) {
+        var row = rows[i];
+        var time = row[0];
+        var name = row[1];
+        var side = row[5];
+        var message = row[6];
+        if (message && message.toString().trim() !== "") {
+          wishes.push({
+            time: time ? time.toString() : "",
+            name: name ? name.toString() : "Khách Quý",
+            side: side ? side.toString() : "Bạn Thân",
+            message: message.toString()
+          });
+        }
+      }
+      return ContentService
+        .createTextOutput(JSON.stringify({ status: "success", data: wishes }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    return ContentService
+      .createTextOutput(JSON.stringify({ status: "active", message: "Wedding RSVP API is online" }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (error) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ status: "error", message: error.toString() }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
 }
 ```
 

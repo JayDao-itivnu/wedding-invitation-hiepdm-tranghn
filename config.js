@@ -604,8 +604,8 @@ const WEDDING_CONFIG = {
 
   // --- 7. CẤU HÌNH FORM RSVP & GOOGLE SHEETS ---
   rsvp: {
-    googleScriptUrl: "", 
-    mockMode: true,
+    googleScriptUrl: "https://script.google.com/macros/s/AKfycbzCSS81qqnN-Zzp7DDUsK3OUx9E6C3b_RPP8CjPYt8yuCmw5_d39ZOekawFwAw9meSl/exec", 
+    mockMode: false,
     defaultGuestName: "Quý khách",
     successMessage: "Cảm ơn bạn rất nhiều! Sự hiện diện của bạn là niềm vinh hạnh to lớn cho gia đình chúng mình.",
     successMessage_fr: "Merci beaucoup ! Votre présence et vos vœux sont un grand honneur pour nos familles.",
